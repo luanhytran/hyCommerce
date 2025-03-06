@@ -1,6 +1,6 @@
 ﻿[x] Design DB (DBML): https://dbdiagram.io/d/EcommerceAPI-67c68657263d6cf9a01e40a8
 [x] Create Project Structure
-[] Create Class Entity
+[x] Create Class Entity
 [] Create BaseEntity + Audit Field
 [] Migration
 [] Repository

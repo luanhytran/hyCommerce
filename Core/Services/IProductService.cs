@@ -1,4 +1,4 @@
-﻿namespace ECommerceAPI.Core.Services;
+﻿namespace eCommerceAPI.Core.Services;
 
 public interface IProductService
 {

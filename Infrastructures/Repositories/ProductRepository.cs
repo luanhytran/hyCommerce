@@ -1,4 +1,4 @@
-﻿namespace ECommerceAPI.Infrastructures.Repositories;
+﻿namespace eCommerceAPI.Infrastructures.Repositories;
 
 public class ProductRepository
 {
