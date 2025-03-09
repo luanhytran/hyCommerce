@@ -11,15 +11,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthorization();
 builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
+builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityCore<User>()
+builder.Services.AddIdentityCore<User>(opt 
+        => opt.User.RequireUniqueEmail = true)
+    .AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddApiEndpoints();
-
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("eCommerceAPI")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("eCommerceAPI")));
 
 var app = builder.Build();
 
@@ -52,9 +53,17 @@ app.MapGet("/weatherforecast", () =>
     .WithName("GetWeatherForecast")
     .WithOpenApi();
 
-app.MapIdentityApi<User>();
+app.UseAuthentication();
+app.UseAuthorization();
 
+app.MapIdentityApi<User>();
 app.MapControllers();
+
+var scope = app.Services.CreateScope();
+var context = scope.ServiceProvider.GetService<AppDbContext>();
+var userManager = scope.ServiceProvider.GetService<UserManager<User>>();
+
+await DbInitializer.Initialize(context, userManager);
 
 app.Run();
 
