@@ -1,14 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using eCommerceAPI.API.RequestHelpers;
+using eCommerceAPI.Core.Models;
+using eCommerceAPI.Core.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerceAPI.API.Controllers;
 
 public class ProductController : BaseController
 {
-    public ProductController() {}
+    private readonly IProductService _productService;
+
+    public ProductController(IProductService productService)
+    {
+        _productService = productService;
+    }
 
     [HttpGet]
-    public IActionResult Get()
+    public async Task<ActionResult<List<Product>>> GetProducts([FromQuery]ProductParams productParams)
     {
-        return Ok();
+        return await _productService.GetProducts(productParams);
+    }
+
+    [HttpGet("{id}", Name = "GetProduct")]
+    public async Task<ActionResult<Product>> GetProduct(int id)
+    {
+        return await _productService.GetProduct(id);
     }
 }

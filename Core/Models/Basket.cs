@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; } = new();
-        public ICollection<BasketItem> BasketItems = new List<BasketItem>();
+        public required User User { get; set; }
+        public ICollection<BasketItem> BasketItems { get; set; } = new List<BasketItem>();
     }
 }

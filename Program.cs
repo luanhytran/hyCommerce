@@ -1,5 +1,7 @@
 using eCommerceAPI.Core.Models;
+using eCommerceAPI.Core.Services;
 using eCommerceAPI.Infrastructures.Data;
+using eCommerceAPI.Infrastructures.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +22,10 @@ builder.Services.AddIdentityCore<User>(opt
     .AddEntityFrameworkStores<AppDbContext>()
     .AddApiEndpoints();
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("eCommerceAPI")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("eCommerceAPI")));
+
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 
