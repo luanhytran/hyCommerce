@@ -5,6 +5,6 @@
         public int Id { get; set; }
         public int UserId { get; set; }
         public required User User { get; set; }
-        public ICollection<BasketItem> BasketItems { get; set; } = new List<BasketItem>();
+        public virtual ICollection<BasketItem> BasketItems { get; set; } = new List<BasketItem>();
     }
 }

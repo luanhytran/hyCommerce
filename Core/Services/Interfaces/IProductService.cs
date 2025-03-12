@@ -2,7 +2,7 @@
 using eCommerceAPI.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace eCommerceAPI.Core.Services;
+namespace eCommerceAPI.Core.Services.Interfaces;
 
 public interface IProductService
 {

@@ -1,11 +1,11 @@
 ﻿using eCommerceAPI.API.RequestHelpers;
 using eCommerceAPI.Core.Models;
-using eCommerceAPI.Core.Services;
+using eCommerceAPI.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerceAPI.API.Controllers;
 
-public class ProductController : BaseController
+public class ProductController : BaseApiController
 {
     private readonly IProductService _productService;
 

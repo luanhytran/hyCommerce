@@ -1,4 +1,5 @@
-﻿using eCommerceAPI.API.RequestHelpers;
+﻿using eCommerceAPI.API.Extensions;
+using eCommerceAPI.API.RequestHelpers;
 using eCommerceAPI.Core.Models;
 using eCommerceAPI.Infrastructures.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,21 @@ public class ProductRepository : IProductRepository
 
     public async Task<ActionResult<List<Product>>> GetProducts(ProductParams productParams)
     {
-        return await _context.Products.
+        var query = _context.Products.
             Include(p => p.Category).
             Include(p => p.Brand).
-            Skip(productParams.PageSize * (productParams.PageNumber -1)).
+            AsQueryable();
+
+        query = query.Sort(productParams.OrderBy);
+        query = query.Search(productParams.SearchTerm);
+        query = query.Filter(productParams.Category, productParams.Brand);
+
+        var products = await query.
+            Skip(productParams.PageSize * (productParams.PageNumber - 1)).
             Take(productParams.PageSize).
             ToListAsync();
+
+        return products;
     }
 
     public async Task<ActionResult<Product>> GetProduct(int id)

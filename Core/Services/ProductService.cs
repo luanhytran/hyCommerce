@@ -1,5 +1,6 @@
 ﻿using eCommerceAPI.API.RequestHelpers;
 using eCommerceAPI.Core.Models;
+using eCommerceAPI.Core.Services.Interfaces;
 using eCommerceAPI.Infrastructures.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
