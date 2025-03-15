@@ -2,7 +2,6 @@
 using eCommerceAPI.API.RequestHelpers;
 using eCommerceAPI.Core.Models;
 using eCommerceAPI.Infrastructures.Data;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace eCommerceAPI.Infrastructures.Repositories;
@@ -15,7 +14,7 @@ public class ProductRepository : IProductRepository
         _context = context;
     }
 
-    public async Task<ActionResult<List<Product>>> GetProducts(ProductParams productParams)
+    public async Task<List<Product>> GetProducts(ProductParams productParams)
     {
         var query = _context.Products.
             Include(p => p.Category).
@@ -34,15 +33,36 @@ public class ProductRepository : IProductRepository
         return products;
     }
 
-    public async Task<ActionResult<Product>> GetProduct(int id)
+    public async Task<Product> GetProduct(int id)
     {
         var product = await _context.Products.
             Include(p => p.Category).
             Include(p => p.Brand).
             FirstOrDefaultAsync(p => p.Id == id);
 
-        if (product == null) return new NotFoundResult();
+        if (product == null) return null;
 
         return product;
+    }
+
+    public async Task<Product> CreateProduct(Product product)
+    {
+        var newProduct = new Product
+        {
+            Name = product.Name,
+            Description = product.Description,
+            PictureUrl = product.PictureUrl,
+            Price = product.Price,
+            CategoryId = product.CategoryId,
+            BrandId = product.BrandId
+        };
+
+        _context.Add(newProduct);
+
+        var result = await _context.SaveChangesAsync() > 0;
+
+        if (result) return newProduct;
+
+        return null;
     }
 }

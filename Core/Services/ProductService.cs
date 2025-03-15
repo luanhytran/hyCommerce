@@ -2,7 +2,6 @@
 using eCommerceAPI.Core.Models;
 using eCommerceAPI.Core.Services.Interfaces;
 using eCommerceAPI.Infrastructures.Repositories;
-using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerceAPI.Core.Services;
 
@@ -15,13 +14,18 @@ public class ProductService : IProductService
         _productRepository = productRepository;
     }
 
-    public async Task<ActionResult<List<Product>>> GetProducts(ProductParams productParams)
+    public async Task<List<Product>> GetProducts(ProductParams productParams)
     {
         return await _productRepository.GetProducts(productParams);
     }
 
-    public async Task<ActionResult<Product>> GetProduct(int id)
+    public async Task<Product> GetProduct(int id)
     {
         return await _productRepository.GetProduct(id);
+    }
+
+    public async Task<Product> CreateProduct(Product product)
+    {
+        return await _productRepository.CreateProduct(product);
     }
 }

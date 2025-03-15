@@ -15,7 +15,7 @@ public class ProductController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Product>>> GetProducts([FromQuery]ProductParams productParams)
+    public async Task<ActionResult<List<Product>>> GetProducts([FromQuery] ProductParams productParams)
     {
         return await _productService.GetProducts(productParams);
     }
@@ -24,5 +24,13 @@ public class ProductController : BaseApiController
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
         return await _productService.GetProduct(id);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<Product>> CreateProduct(Product product)
+    {
+        var newProduct = await _productService.CreateProduct(product);
+
+        return CreatedAtRoute("GetProduct", new { id = newProduct?.Id }, newProduct);
     }
 }
