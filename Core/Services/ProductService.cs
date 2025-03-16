@@ -1,4 +1,5 @@
 ﻿using eCommerceAPI.API.RequestHelpers;
+using eCommerceAPI.Core.Common;
 using eCommerceAPI.Core.Models;
 using eCommerceAPI.Core.Services.Interfaces;
 using eCommerceAPI.Infrastructures.Repositories;
@@ -14,18 +15,30 @@ public class ProductService : IProductService
         _productRepository = productRepository;
     }
 
-    public async Task<List<Product>> GetProducts(ProductParams productParams)
+    public async Task<Result<List<Product>>> GetProducts(ProductParams productParams)
     {
-        return await _productRepository.GetProducts(productParams);
+        var products = await _productRepository.GetProducts(productParams);
+        
+        return products.Count > 0 ? 
+            Result<List<Product>>.Success(products) : 
+            Result<List<Product>>.Failure("Get products failed");
     }
 
-    public async Task<Product> GetProduct(int id)
+    public async Task<Result<Product>> GetProduct(int id)
     {
-        return await _productRepository.GetProduct(id);
+        var product = await _productRepository.GetProduct(id);
+
+        return product != null ? 
+            Result<Product>.Success(product) : 
+            Result<Product>.Failure("Get product failed");
     }
 
-    public async Task<Product> CreateProduct(Product product)
+    public async Task<Result<Product>> CreateProduct(Product product)
     {
-        return await _productRepository.CreateProduct(product);
+        var createdProduct = await _productRepository.CreateProduct(product);
+        
+        return createdProduct != null ? 
+            Result<Product>.Success(createdProduct) : 
+            Result<Product>.Failure("Create product failed");
     }
 }

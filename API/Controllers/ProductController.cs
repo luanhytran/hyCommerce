@@ -17,20 +17,25 @@ public class ProductController : BaseApiController
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetProducts([FromQuery] ProductParams productParams)
     {
-        return await _productService.GetProducts(productParams);
+        var result = await _productService.GetProducts(productParams);
+        if (result.IsSuccess) return Ok(result.Data);
+        return BadRequest(result.ErrorMessage);
     }
 
     [HttpGet("{id}", Name = "GetProduct")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
-        return await _productService.GetProduct(id);
+        var result = await _productService.GetProduct(id);
+        if (result.IsSuccess) return Ok(result.Data);
+        return BadRequest(result.ErrorMessage);
     }
 
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
-        var newProduct = await _productService.CreateProduct(product);
-
-        return CreatedAtRoute("GetProduct", new { id = newProduct?.Id }, newProduct);
+        var result = await _productService.CreateProduct(product);
+        if (result.IsSuccess)
+            return CreatedAtRoute("GetProduct", new { id = result?.Data?.Id }, result?.Data);
+        return BadRequest(result.ErrorMessage);
     }
 }

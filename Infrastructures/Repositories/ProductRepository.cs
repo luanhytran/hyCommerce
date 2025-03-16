@@ -33,19 +33,15 @@ public class ProductRepository : IProductRepository
         return products;
     }
 
-    public async Task<Product> GetProduct(int id)
+    public async Task<Product?> GetProduct(int id)
     {
-        var product = await _context.Products.
+        return await _context.Products.
             Include(p => p.Category).
             Include(p => p.Brand).
             FirstOrDefaultAsync(p => p.Id == id);
-
-        if (product == null) return null;
-
-        return product;
     }
 
-    public async Task<Product> CreateProduct(Product product)
+    public async Task<Product?> CreateProduct(Product product)
     {
         var newProduct = new Product
         {
@@ -56,13 +52,9 @@ public class ProductRepository : IProductRepository
             CategoryId = product.CategoryId,
             BrandId = product.BrandId
         };
-
+        
         _context.Add(newProduct);
 
-        var result = await _context.SaveChangesAsync() > 0;
-
-        if (result) return newProduct;
-
-        return null;
+        return await _context.SaveChangesAsync() > 0 ? newProduct : null;
     }
 }
