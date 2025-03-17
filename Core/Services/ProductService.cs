@@ -17,28 +17,49 @@ public class ProductService : IProductService
 
     public async Task<Result<List<Product>>> GetProducts(ProductParams productParams)
     {
-        var products = await _productRepository.GetProducts(productParams);
-        
-        return products.Count > 0 ? 
-            Result<List<Product>>.Success(products) : 
-            Result<List<Product>>.Failure("Get products failed");
+        try
+        {
+            var products = await _productRepository.GetProducts(productParams);
+
+            return products.Count != 0
+                ? Result<List<Product>>.Success(products)
+                : Result<List<Product>>.Failure("No products found");
+        }
+        catch (Exception ex)
+        {
+            return Result<List<Product>>.Failure($"Error retrieving products: {ex.Message}");
+        }
     }
 
     public async Task<Result<Product>> GetProduct(int id)
     {
-        var product = await _productRepository.GetProduct(id);
+        try
+        {
+            var product = await _productRepository.GetProduct(id);
 
-        return product != null ? 
-            Result<Product>.Success(product) : 
-            Result<Product>.Failure("Get product failed");
+            return product != null ? 
+                Result<Product>.Success(product) : 
+                Result<Product>.Failure("No product found");
+        }
+        catch(Exception ex)
+        {
+            return Result<Product>.Failure($"Error retrieving product: {ex.Message}");
+        }
     }
 
     public async Task<Result<Product>> CreateProduct(Product product)
     {
-        var createdProduct = await _productRepository.CreateProduct(product);
-        
-        return createdProduct != null ? 
-            Result<Product>.Success(createdProduct) : 
-            Result<Product>.Failure("Create product failed");
+        try
+        {
+            var createdProduct = await _productRepository.CreateProduct(product);
+
+            return createdProduct != null
+                ? Result<Product>.Success(createdProduct)
+                : Result<Product>.Failure("Failed to create product. Please ensure all required fields are provided.");
+        }
+        catch (Exception ex)
+        {
+            return Result<Product>.Failure($"Error creating product: {ex.Message}");
+        }
     }
 }

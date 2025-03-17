@@ -43,6 +43,9 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product?> CreateProduct(Product product)
     {
+        if (product == null)
+            throw new ArgumentNullException(nameof(product));
+        
         var newProduct = new Product
         {
             Name = product.Name,
@@ -54,7 +57,6 @@ public class ProductRepository : IProductRepository
         };
         
         _context.Add(newProduct);
-
         return await _context.SaveChangesAsync() > 0 ? newProduct : null;
     }
 }

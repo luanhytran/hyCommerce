@@ -19,7 +19,7 @@ public class ProductController : BaseApiController
     {
         var result = await _productService.GetProducts(productParams);
         if (result.IsSuccess) return Ok(result.Data);
-        return BadRequest(result.ErrorMessage);
+        return NotFound(result.ErrorMessage);
     }
 
     [HttpGet("{id}", Name = "GetProduct")]
@@ -27,7 +27,7 @@ public class ProductController : BaseApiController
     {
         var result = await _productService.GetProduct(id);
         if (result.IsSuccess) return Ok(result.Data);
-        return BadRequest(result.ErrorMessage);
+        return NotFound(result.ErrorMessage);
     }
 
     [HttpPost]
