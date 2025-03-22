@@ -35,7 +35,17 @@ public class ProductController : BaseApiController
     {
         var result = await _productService.CreateProduct(product);
         if (result.IsSuccess)
-            return CreatedAtRoute("GetProduct", new { id = result?.Data?.Id }, result?.Data);
+            return CreatedAtRoute("GetProduct", new { id = result.Data?.Id }, result.Data);
         return BadRequest(result.ErrorMessage);
+    }
+
+    [HttpPost("{id}", Name = "delete")]
+    public async Task<ActionResult<string>> DeleteProduct(int id)
+    {
+        var result = await _productService.DeleteProduct(id);
+
+        if (!result.IsSuccess) return BadRequest(result.ErrorMessage);
+        
+        return Ok();
     }
 }

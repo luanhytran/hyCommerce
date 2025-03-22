@@ -2,7 +2,6 @@
 using eCommerceAPI.API.RequestHelpers;
 using eCommerceAPI.Core.Models;
 using eCommerceAPI.Core.Services;
-using eCommerceAPI.Core.Services.Interfaces;
 using eCommerceAPI.Infrastructures.Repositories;
 using FluentAssertions;
 using Moq;
@@ -39,6 +38,29 @@ namespace eCommerceAPI.Tests.Services
             result.Data.Should().HaveCount(3);
 
             _productRepositoryMock.Verify(repo => repo.GetProducts(It.IsAny<ProductParams>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetProduct_WithValidParam_ReturnProduct()
+        {
+            //Arrange
+            var product = _fixture.Create<Product>();
+            product.Id = 1;
+
+            _productRepositoryMock.Setup(repo => repo.GetProduct(1))
+                .ReturnsAsync(product);
+
+            //Act
+            var result = await _productService.GetProduct(1);
+
+            //Assert
+            result.Should().NotBeNull();
+            result.IsSuccess.Should().BeTrue();
+            result.ErrorMessage.Should().BeNull();
+            result.Data.Should().NotBeNull();
+            result.Data.Id.Should().Be(1);
+
+            _productRepositoryMock.Verify(repo => repo.GetProduct(It.IsAny<int>()), Times.Once);
         }
     }
 }

@@ -62,4 +62,15 @@ public class ProductService : IProductService
             return Result<Product>.Failure($"Error creating product: {ex.Message}");
         }
     }
+
+    public async Task<Result<bool>> DeleteProduct(int id)
+    {
+        var product = await _productRepository.GetProduct(id);
+
+        if (product == null) return Result<bool>.Failure("Product not found.");
+
+        var result = await _productRepository.DeleteProduct(id);
+
+        return result ? Result<bool>.Success(result) : Result<bool>.Failure("Failed to delete product.");
+    }
 }

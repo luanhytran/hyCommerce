@@ -59,4 +59,15 @@ public class ProductRepository : IProductRepository
         _context.Add(newProduct);
         return await _context.SaveChangesAsync() > 0 ? newProduct : null;
     }
+
+    public async Task<bool> DeleteProduct(int id)
+    {
+        var product = await _context.Products.FindAsync(id);
+
+        if (product == null) return false;
+        
+        _context.Products.Remove(product);
+        
+        return await _context.SaveChangesAsync() > 0;
+    }
 }

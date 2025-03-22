@@ -1,6 +1,6 @@
 ﻿namespace eCommerceAPI.Core.DTOs;
 
-public class ProductDTO
+public class ProductDto
 {
     
 }

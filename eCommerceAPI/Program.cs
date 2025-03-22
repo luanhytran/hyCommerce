@@ -58,8 +58,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityCore<User>(opt 
-        => opt.User.RequireUniqueEmail = true)
+builder.Services.AddIdentityCore<User>(opt => {
+        opt.User.RequireUniqueEmail = true;
+        opt.Password.RequireNonAlphanumeric = false;
+    })
     .AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddApiEndpoints();
