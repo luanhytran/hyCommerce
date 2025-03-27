@@ -43,9 +43,6 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product?> CreateProduct(Product product)
     {
-        if (product == null)
-            throw new ArgumentNullException(nameof(product));
-        
         var newProduct = new Product
         {
             Name = product.Name,
@@ -56,7 +53,7 @@ public class ProductRepository : IProductRepository
             BrandId = product.BrandId
         };
         
-        _context.Add(newProduct);
+        _context.Products.Add(newProduct);
         return await _context.SaveChangesAsync() > 0 ? newProduct : null;
     }
 
@@ -64,7 +61,8 @@ public class ProductRepository : IProductRepository
     {
         var product = await _context.Products.FindAsync(id);
 
-        if (product == null) return false;
+        if (product == null) 
+            return false;
         
         _context.Products.Remove(product);
         
