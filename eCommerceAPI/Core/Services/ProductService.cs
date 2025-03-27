@@ -55,7 +55,7 @@ public class ProductService : IProductService
 
             return createdProduct != null
                 ? Result<Product>.Success(createdProduct)
-                : Result<Product>.Failure("Failed to create product. Please ensure all required fields are provided.");
+                : Result<Product>.Failure("Failed to create product. Please ensure all required fields are provided");
         }
         catch (Exception ex)
         {
@@ -67,10 +67,10 @@ public class ProductService : IProductService
     {
         var product = await _productRepository.GetProduct(id);
 
-        if (product == null) return Result<bool>.Failure("Product not found.");
+        if (product == null) return Result<bool>.Failure("Product not found");
 
         var result = await _productRepository.DeleteProduct(id);
 
-        return result ? Result<bool>.Success(result) : Result<bool>.Failure("Failed to delete product.");
+        return result ? Result<bool>.Success(result) : Result<bool>.Failure("Failed to delete product");
     }
 }

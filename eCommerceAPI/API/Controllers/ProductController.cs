@@ -39,13 +39,16 @@ public class ProductController : BaseApiController
         return BadRequest(result.ErrorMessage);
     }
 
-    [HttpPost("{id}", Name = "delete")]
-    public async Task<ActionResult<string>> DeleteProduct(int id)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteProduct(int id)
     {
         var result = await _productService.DeleteProduct(id);
 
-        if (!result.IsSuccess) return BadRequest(result.ErrorMessage);
+        if (!result.IsSuccess) 
+            return result.ErrorMessage.Contains("not found", StringComparison.OrdinalIgnoreCase) 
+                ? NotFound(result.ErrorMessage) 
+                : BadRequest(result.ErrorMessage);
         
-        return Ok();
+        return NoContent();
     }
 }
