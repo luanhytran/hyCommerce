@@ -1,5 +1,5 @@
-﻿using eCommerceAPI.Core.Models;
-using eCommerceAPI.Core.Services.Interfaces;
+﻿using eCommerceAPI.Core.Contracts.Services;
+using eCommerceAPI.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

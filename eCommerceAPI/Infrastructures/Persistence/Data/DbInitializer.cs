@@ -1,7 +1,7 @@
 using eCommerceAPI.Core.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace eCommerceAPI.Infrastructures.Data;
+namespace eCommerceAPI.Infrastructures.Persistence.Data;
 
 public class DbInitializer
 {

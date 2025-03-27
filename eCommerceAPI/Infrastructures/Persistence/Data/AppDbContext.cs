@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace eCommerceAPI.Infrastructures.Data;
+namespace eCommerceAPI.Infrastructures.Persistence.Data;
 
 public class AppDbContext : IdentityDbContext<User, Role, int>
 {

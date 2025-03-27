@@ -1,7 +1,7 @@
 ﻿using eCommerceAPI.API.RequestHelpers;
 using eCommerceAPI.Core.Models;
 
-namespace eCommerceAPI.Infrastructures.Repositories;
+namespace eCommerceAPI.Core.Contracts.Repositories;
 
 public interface IProductRepository
 {

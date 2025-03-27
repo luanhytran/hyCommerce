@@ -2,7 +2,7 @@
 using eCommerceAPI.Core.Common;
 using eCommerceAPI.Core.Models;
 
-namespace eCommerceAPI.Core.Services.Interfaces;
+namespace eCommerceAPI.Core.Contracts.Services;
 
 public interface IProductService
 {

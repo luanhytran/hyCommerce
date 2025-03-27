@@ -1,10 +1,11 @@
 ﻿using eCommerceAPI.API.Extensions;
 using eCommerceAPI.API.RequestHelpers;
+using eCommerceAPI.Core.Contracts.Repositories;
 using eCommerceAPI.Core.Models;
-using eCommerceAPI.Infrastructures.Data;
+using eCommerceAPI.Infrastructures.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace eCommerceAPI.Infrastructures.Repositories;
+namespace eCommerceAPI.Infrastructures.Persistence.Repositories;
 
 public class ProductRepository : IProductRepository
 {
@@ -53,8 +54,9 @@ public class ProductRepository : IProductRepository
             BrandId = product.BrandId
         };
         
-        _context.Products.Add(newProduct);
-        return await _context.SaveChangesAsync() > 0 ? newProduct : null;
+        await _context.Products.AddAsync(newProduct);
+
+        return newProduct;
     }
 
     public async Task<bool> DeleteProduct(int id)

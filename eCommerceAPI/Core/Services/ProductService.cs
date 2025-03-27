@@ -1,18 +1,21 @@
 ﻿using eCommerceAPI.API.RequestHelpers;
 using eCommerceAPI.Core.Common;
+using eCommerceAPI.Core.Contracts;
+using eCommerceAPI.Core.Contracts.Repositories;
+using eCommerceAPI.Core.Contracts.Services;
 using eCommerceAPI.Core.Models;
-using eCommerceAPI.Core.Services.Interfaces;
-using eCommerceAPI.Infrastructures.Repositories;
 
 namespace eCommerceAPI.Core.Services;
 
 public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ProductService(IProductRepository productRepository)
+    public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork)
     {
         _productRepository = productRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<List<Product>>> GetProducts(ProductParams productParams)
@@ -51,10 +54,12 @@ public class ProductService : IProductService
         {
             var createdProduct = await _productRepository.CreateProduct(product);
 
-            return createdProduct != null
-                ? Result<Product>.Success(createdProduct)
-                : Result<Product>.Failure(
-                    "Failed to create product. Please ensure all required fields are provided");
+            if (createdProduct == null)
+                return Result<Product>.Failure("Failed to create product");
+
+            await _unitOfWork.SaveAsync();
+
+            return Result<Product>.Success(createdProduct);
         }
         catch (Exception ex)
         {

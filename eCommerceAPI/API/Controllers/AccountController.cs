@@ -1,6 +1,6 @@
-﻿using eCommerceAPI.Core.DTOs;
+﻿using eCommerceAPI.Core.Contracts.Services;
+using eCommerceAPI.Core.DTOs;
 using eCommerceAPI.Core.Models;
-using eCommerceAPI.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

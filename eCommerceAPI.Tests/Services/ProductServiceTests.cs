@@ -1,8 +1,10 @@
 ﻿using AutoFixture;
 using eCommerceAPI.API.RequestHelpers;
+using eCommerceAPI.Core.Contracts;
+using eCommerceAPI.Core.Contracts.Repositories;
 using eCommerceAPI.Core.Models;
 using eCommerceAPI.Core.Services;
-using eCommerceAPI.Infrastructures.Repositories;
+using eCommerceAPI.Infrastructures.Persistence;
 using FluentAssertions;
 using Moq;
 
@@ -10,14 +12,16 @@ namespace eCommerceAPI.Tests.Services
 {
     public class ProductServiceTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWork;
         private readonly Mock<IProductRepository> _productRepositoryMock;
         private readonly ProductService _productService;
         private readonly Fixture _fixture;
 
         public ProductServiceTests()
         {
+            _unitOfWork = new Mock<IUnitOfWork>();
             _productRepositoryMock = new Mock<IProductRepository>();
-            _productService = new ProductService(_productRepositoryMock.Object);
+            _productService = new ProductService(_productRepositoryMock.Object, _unitOfWork.Object);
             _fixture = new Fixture();
         }
 

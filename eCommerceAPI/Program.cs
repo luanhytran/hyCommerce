@@ -1,8 +1,11 @@
+using eCommerceAPI.Core.Contracts;
+using eCommerceAPI.Core.Contracts.Repositories;
+using eCommerceAPI.Core.Contracts.Services;
 using eCommerceAPI.Core.Models;
 using eCommerceAPI.Core.Services;
-using eCommerceAPI.Core.Services.Interfaces;
-using eCommerceAPI.Infrastructures.Data;
-using eCommerceAPI.Infrastructures.Repositories;
+using eCommerceAPI.Infrastructures.Persistence;
+using eCommerceAPI.Infrastructures.Persistence.Data;
+using eCommerceAPI.Infrastructures.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -71,6 +74,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
