@@ -1,4 +1,5 @@
-﻿using eCommerceAPI.Core.Contracts.Services;
+﻿using System.Web;
+using eCommerceAPI.Core.Contracts.Services;
 using eCommerceAPI.Core.DTOs;
 using eCommerceAPI.Core.Models;
 using Microsoft.AspNetCore.Identity;
@@ -10,11 +11,13 @@ namespace eCommerceAPI.API.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly ITokenService _tokenService;
+        private readonly IEmailService _emailService;
 
-        public AccountController(UserManager<User> userManager, ITokenService tokenService)
+        public AccountController(UserManager<User> userManager, ITokenService tokenService, IEmailService emailService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
+            _emailService = emailService;
         }
 
         [HttpPost("login")]
@@ -23,7 +26,10 @@ namespace eCommerceAPI.API.Controllers
             var user = await _userManager.FindByNameAsync(loginDto.UserName);
 
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
-                return Unauthorized();
+                return Unauthorized("Invalid credentials");;
+            
+            if(!user.EmailConfirmed)
+                return Unauthorized("Email not confirmed");
 
             return await _tokenService.GenerateToken(user);
         }
@@ -43,8 +49,42 @@ namespace eCommerceAPI.API.Controllers
             }
 
             await _userManager.AddToRoleAsync(user, "Member");
+            
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            
+            var encodedToken = HttpUtility.UrlEncode(token);
+            
+            var confirmationLink = Url.Action("ConfirmEmail", "Account", new
+            {
+                userId = user.Id,
+                token = encodedToken,
+            }, Request.Scheme);
+            
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "Confirm your account",
+                $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Email</a>",
+                true);
 
-            return Ok();
+            return Ok("Registration successful. Please check your email to confirm your account.");
+        }
+
+        [HttpGet("confirm-email")]
+        public async Task<ActionResult> ConfirmEmail(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            
+            if (user == null)
+                return BadRequest("User not found");
+            
+            var decodedToken = HttpUtility.UrlDecode(token);
+            
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+            if (result.Succeeded)
+                return Ok("Email confirmed successfully");
+            
+            return BadRequest("Invalid token or email confirmation failed");
         }
     }
 }

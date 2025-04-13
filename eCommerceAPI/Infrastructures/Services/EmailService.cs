@@ -11,7 +11,7 @@ public class EmailService(IOptions<EmailSettings> emailSettings) : IEmailService
 {
     private readonly EmailSettings _emailSettings = emailSettings.Value;
 
-    public void SendEmail(string to, string subject, string body, bool isHtml = false)
+    public async Task SendEmailAsync(string to, string subject, string body, bool isHtml = false)
     {
         var message = new MimeMessage();
         message.From.Add(MailboxAddress.Parse(_emailSettings.SenderEmail));
@@ -26,10 +26,10 @@ public class EmailService(IOptions<EmailSettings> emailSettings) : IEmailService
         
         try
         {
-            smtpClient.Connect(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
-            smtpClient.Authenticate(_emailSettings.SenderEmail, _emailSettings.Password);
-            smtpClient.Send(message);
-            smtpClient.Disconnect(true);
+            await smtpClient.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
+            await smtpClient.AuthenticateAsync(_emailSettings.SenderEmail, _emailSettings.Password);
+            await smtpClient.SendAsync(message);
+            await smtpClient.DisconnectAsync(true);
 
             Console.WriteLine("Email sent successfully.");
         }

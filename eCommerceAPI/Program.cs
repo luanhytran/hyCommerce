@@ -65,6 +65,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddIdentityCore<User>(opt => {
         opt.User.RequireUniqueEmail = true;
         opt.Password.RequireNonAlphanumeric = false;
+        opt.SignIn.RequireConfirmedEmail = true;
     })
     .AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>()
