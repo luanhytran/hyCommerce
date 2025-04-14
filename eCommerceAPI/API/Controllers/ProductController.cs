@@ -1,6 +1,7 @@
 ﻿using eCommerceAPI.API.RequestHelpers;
 using eCommerceAPI.Core.Contracts.Services;
 using eCommerceAPI.Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerceAPI.API.Controllers;
@@ -14,6 +15,7 @@ public class ProductController : BaseApiController
         _productService = productService;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetProducts([FromQuery] ProductParams productParams)
     {

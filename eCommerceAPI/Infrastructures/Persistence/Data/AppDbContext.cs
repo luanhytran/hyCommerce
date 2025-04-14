@@ -21,6 +21,7 @@ public class AppDbContext : IdentityDbContext<User, Role, int>
     public DbSet<BasketItem> BasketItems { get; set; }
     public DbSet<Likes> Likes { get; set; }
     public DbSet<Discount> Discounts { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -31,6 +32,15 @@ public class AppDbContext : IdentityDbContext<User, Role, int>
             .WithOne()
             .HasForeignKey<UserAddress>(a => a.Id)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<User>()
+            .HasMany(u => u.RefreshTokens)
+            .WithOne(rt => rt.User)
+            .HasForeignKey(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<RefreshToken>()
+            .HasKey(rt => rt.Id);
             
         builder.Entity<Role>()
             .HasData(

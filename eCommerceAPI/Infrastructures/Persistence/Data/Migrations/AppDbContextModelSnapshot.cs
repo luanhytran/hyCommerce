@@ -357,6 +357,37 @@ namespace eCommerceAPI.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("eCommerceAPI.Core.Models.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("Revoked")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("eCommerceAPI.Core.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -709,6 +740,17 @@ namespace eCommerceAPI.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("eCommerceAPI.Core.Models.RefreshToken", b =>
+                {
+                    b.HasOne("eCommerceAPI.Core.Models.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("eCommerceAPI.Core.Models.UserAddress", b =>
                 {
                     b.HasOne("eCommerceAPI.Core.Models.User", null)
@@ -732,6 +774,8 @@ namespace eCommerceAPI.Migrations
                 {
                     b.Navigation("Address")
                         .IsRequired();
+
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,8 +2,10 @@
 using eCommerceAPI.Core.Contracts.Services;
 using eCommerceAPI.Core.DTOs;
 using eCommerceAPI.Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace eCommerceAPI.API.Controllers
 {
@@ -21,7 +23,7 @@ namespace eCommerceAPI.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginDto loginDto)
+        public async Task<ActionResult<AuthResult>> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByNameAsync(loginDto.UserName);
 
@@ -30,8 +32,8 @@ namespace eCommerceAPI.API.Controllers
             
             if(!user.EmailConfirmed)
                 return Unauthorized("Email not confirmed");
-
-            return await _tokenService.GenerateToken(user);
+            
+            return await _tokenService.CreateTokenAsync(user);
         }
 
         [HttpPost("register")]
@@ -85,6 +87,32 @@ namespace eCommerceAPI.API.Controllers
                 return Ok("Email confirmed successfully");
             
             return BadRequest("Invalid token or email confirmation failed");
+        }
+        
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<AuthResult>> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
+        {
+            try
+            {
+                var result = await _tokenService.RefreshTokenAsync(refreshTokenDto.AccessToken, refreshTokenDto.RefreshToken);
+                return Ok(result);
+            }
+            catch (SecurityTokenException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("revoke-token")]
+        public async Task<ActionResult> RevokeToken([FromBody] RevokeTokenDto revokeTokenDto)
+        {
+            var success = await _tokenService.RevokeRefreshTokenAsync(revokeTokenDto.Token);
+            
+            if (!success)
+                return NotFound("Token not found");
+                
+            return Ok("Token revoked");
         }
     }
 }
