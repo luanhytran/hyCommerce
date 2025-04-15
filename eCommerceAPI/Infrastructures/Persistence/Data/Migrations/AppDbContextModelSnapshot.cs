@@ -8,7 +8,7 @@ using eCommerceAPI.Infrastructures.Persistence.Data;
 
 #nullable disable
 
-namespace eCommerceAPI.Migrations
+namespace eCommerceAPI.Infrastructures.Persistence.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot

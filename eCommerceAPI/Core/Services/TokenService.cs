@@ -52,7 +52,8 @@ namespace eCommerceAPI.Core.Services
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim (ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -68,7 +69,7 @@ namespace eCommerceAPI.Core.Services
                 issuer: null,
                 audience: null,
                 claims: claims,
-                expires: DateTime.Now.AddDays(7),
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds
             );
 
