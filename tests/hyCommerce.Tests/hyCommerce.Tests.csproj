@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\hyCommerce\hyCommerce.csproj" />
+      <ProjectReference Include="..\..\src\Core\hyCommerce\hyCommerce.csproj" />
     </ItemGroup>
 
     <ItemGroup>

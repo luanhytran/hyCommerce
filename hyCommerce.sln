@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce", "hyCommerce\hyCommerce.csproj", "{2F549036-4D21-A413-EACE-1AFA5386FE9A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce", "src\Core\hyCommerce\hyCommerce.csproj", "{A425D835-09C4-75BB-1CB3-5FC52C290152}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Tests", "hyCommerce.Tests\hyCommerce.Tests.csproj", "{17381769-9628-3F09-25C1-D003886269E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Tests", "tests\hyCommerce.Tests\hyCommerce.Tests.csproj", "{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notification", "{F0227D00-1FB9-4513-9A37-8D923E6D72C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Notification", "src\Notification\hyCommerce.Notification\hyCommerce.Notification.csproj", "{AA3F68EB-6F0A-850E-3DAF-32241075D142}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,16 +19,24 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2F549036-4D21-A413-EACE-1AFA5386FE9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F549036-4D21-A413-EACE-1AFA5386FE9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F549036-4D21-A413-EACE-1AFA5386FE9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F549036-4D21-A413-EACE-1AFA5386FE9A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17381769-9628-3F09-25C1-D003886269E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17381769-9628-3F09-25C1-D003886269E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17381769-9628-3F09-25C1-D003886269E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17381769-9628-3F09-25C1-D003886269E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A425D835-09C4-75BB-1CB3-5FC52C290152}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A425D835-09C4-75BB-1CB3-5FC52C290152}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A425D835-09C4-75BB-1CB3-5FC52C290152}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A425D835-09C4-75BB-1CB3-5FC52C290152}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA3F68EB-6F0A-850E-3DAF-32241075D142}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA3F68EB-6F0A-850E-3DAF-32241075D142}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA3F68EB-6F0A-850E-3DAF-32241075D142}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA3F68EB-6F0A-850E-3DAF-32241075D142}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A425D835-09C4-75BB-1CB3-5FC52C290152} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{AA3F68EB-6F0A-850E-3DAF-32241075D142} = {F0227D00-1FB9-4513-9A37-8D923E6D72C5}
 	EndGlobalSection
 EndGlobal
