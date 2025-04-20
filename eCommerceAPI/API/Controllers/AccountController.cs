@@ -94,7 +94,7 @@ namespace eCommerceAPI.API.Controllers
         {
             try
             {
-                var result = await _tokenService.RefreshTokenAsync(refreshTokenDto.AccessToken, refreshTokenDto.RefreshToken);
+                var result = await _tokenService.RefreshTokenAsync(refreshTokenDto.RefreshToken);
                 return Ok(result);
             }
             catch (SecurityTokenException ex)

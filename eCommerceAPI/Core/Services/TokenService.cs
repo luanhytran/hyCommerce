@@ -47,10 +47,7 @@ namespace eCommerceAPI.Core.Services
             };
 
             var roles = await _userManager.GetRolesAsync(user);
-            foreach(var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWTSettings:TokenKey"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -59,7 +56,7 @@ namespace eCommerceAPI.Core.Services
                 issuer: null,
                 audience: null,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToInt32(_config["JWTSettings:ExpiryMinutes"])),
                 signingCredentials: creds
             );
 
