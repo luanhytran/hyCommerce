@@ -3,30 +3,20 @@ using eCommerceAPI.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.InteropServices.JavaScript;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using eCommerceAPI.Core.DTOs;
-using eCommerceAPI.Infrastructures.Persistence;
 using eCommerceAPI.Infrastructures.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Math;
 
 namespace eCommerceAPI.Core.Services
 {
-    public class TokenService : ITokenService
+    public class TokenService(IConfiguration config, UserManager<User> userManager, AppDbContext context) : ITokenService
     {
-        private readonly IConfiguration _config;
-        private readonly UserManager<User> _userManager;
-        private readonly AppDbContext _context;
-
-        public TokenService(IConfiguration config, UserManager<User> userManager, AppDbContext context)
-        {
-            _config = config;
-            _userManager = userManager;
-            _context = context;
-        }
+        private readonly IConfiguration _config = config;
+        private readonly UserManager<User> _userManager = userManager;
+        private readonly AppDbContext _context = context;
 
         public async Task<AuthResult> CreateTokenAsync(User user)
         {
@@ -51,9 +41,9 @@ namespace eCommerceAPI.Core.Services
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new(ClaimTypes.Name, user.UserName!),
+                new(ClaimTypes.Email, user.Email!),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -62,7 +52,7 @@ namespace eCommerceAPI.Core.Services
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWTSettings:TokenKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWTSettings:TokenKey"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var tokenOptions = new JwtSecurityToken(
@@ -91,33 +81,20 @@ namespace eCommerceAPI.Core.Services
             };
         }
 
-        public async Task<AuthResult> RefreshTokenAsync(string token, string refreshToken)
+        public async Task<AuthResult> RefreshTokenAsync(string token)
         {
-            var principal = GetPrincipalFromExpiredToken(token);
-            
-            if (principal == null)
-                throw new SecurityTokenException("Invalid access token");
+            var refreshToken = await _context.RefreshTokens
+                .SingleOrDefaultAsync(rt => rt.Token == token)
+                ?? throw new SecurityTokenException("Invalid refresh token");
 
-            var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (!int.TryParse(userId, out int id)) throw new SecurityTokenException("Invalid token");
-            
-            var user = _userManager.Users
-                .Include(u => u.RefreshTokens)
-                .FirstOrDefault(u => u.Id == id);
-                
-            if (user == null)
-                throw new SecurityTokenException("User not found");
-                
-            var storedRefreshToken = user.RefreshTokens.SingleOrDefault(rt => rt.Token == refreshToken);
-                
-            if (storedRefreshToken == null)
-                throw new SecurityTokenException("Invalid refresh token");
-            
-            if (!storedRefreshToken.IsActive)
+            if (!refreshToken.IsActive)
                 throw new SecurityTokenException("Refresh token expired or revoked");
-                
-            storedRefreshToken.Revoked = DateTime.UtcNow;
+
+            var user = await _userManager.Users
+                .FirstOrDefaultAsync(u => u.Id == refreshToken.UserId)
+                ?? throw new SecurityTokenException("User not found");
+
+            refreshToken.Revoked = DateTime.UtcNow;
             
             await _context.SaveChangesAsync();
 
@@ -126,51 +103,17 @@ namespace eCommerceAPI.Core.Services
             return result;
         }
 
-        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
-        {
-            var validationParameters = new TokenValidationParameters()
-            {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                    .GetBytes(_config["JWTSettings:TokenKey"]))
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            try
-            {
-                var principal =
-                    tokenHandler.ValidateToken(token, validationParameters, out var securityToken);
-
-                if (!(securityToken is JwtSecurityToken jwtSecurityToken) ||
-                    !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                        StringComparison.InvariantCultureIgnoreCase))
-                {
-                    throw new SecurityTokenException("Invalid token");
-                }
-
-                return principal;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
         public async Task<bool> RevokeRefreshTokenAsync(string token)
         {
-            var user = _userManager.Users
-                .Include(u => u.RefreshTokens)
-                .SingleOrDefaultAsync(u => u.RefreshTokens.Any(rt => rt.Token == token && rt.IsActive));
+            var refreshToken = await _context.RefreshTokens
+                .SingleOrDefaultAsync(rt => rt.Token == token) 
+                ?? throw new SecurityTokenException("Invalid refresh token");
 
-            if (user == null)
-                return false;
+            if (!refreshToken.IsActive)
+                throw new SecurityTokenException("Refresh token expired or revoked");
 
-            var refreshToken = _context.RefreshTokens.Single(rt => rt.Token == token);
             refreshToken.Revoked = DateTime.UtcNow;
-            
+
             await _context.SaveChangesAsync();
             
             return true;
