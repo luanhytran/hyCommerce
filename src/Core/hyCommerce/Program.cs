@@ -8,11 +8,11 @@ using hyCommerce.Core.Contracts.Services;
 using hyCommerce.Infrastructures.Persistence.Data;
 using hyCommerce.Core.Contracts.Repositories;
 using hyCommerce.Core.Contracts;
-using hyCommerce.Infrastructures.Services;
 using hyCommerce.Infrastructures.Persistence.Repositories;
 using hyCommerce.Infrastructures.Persistence;
 using hyCommerce.Core.Services;
 using hyCommerce.Core.Models;
+using hyCommerce.Notification;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,8 +78,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddMailSender(builder.Configuration);
 
 var app = builder.Build();
 

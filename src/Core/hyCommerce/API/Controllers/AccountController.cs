@@ -2,6 +2,7 @@
 using hyCommerce.Core.Contracts.Services;
 using hyCommerce.Core.DTOs;
 using hyCommerce.Core.Models;
+using hyCommerce.Notification.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +14,13 @@ namespace hyCommerce.API.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly ITokenService _tokenService;
-        private readonly IEmailService _emailService;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(UserManager<User> userManager, ITokenService tokenService, IEmailService emailService)
+        public AccountController(UserManager<User> userManager, ITokenService tokenService, IEmailSender emailSender)
         {
             _userManager = userManager;
             _tokenService = tokenService;
-            _emailService = emailService;
+            _emailSender = emailSender;
         }
 
         [HttpPost("login")]
@@ -61,12 +62,16 @@ namespace hyCommerce.API.Controllers
                 userId = user.Id,
                 token = encodedToken,
             }, Request.Scheme);
-            
-            await _emailService.SendEmailAsync(
-                user.Email,
-                "Confirm your account",
-                $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Email</a>",
-                true);
+
+            var emailRequest = new EmailRequest<object>
+            {
+                To = user.Email,
+                Subject = "Confirm your account",
+                Body = $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Email</a>",
+                IsHtml = true,
+            };
+
+            await _emailSender.SendEmailAsync(emailRequest);
 
             return Ok("Registration successful. Please check your email to confirm your account.");
         }
