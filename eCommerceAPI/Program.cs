@@ -71,7 +71,7 @@ builder.Services.AddIdentityCore<User>(opt => {
     .AddEntityFrameworkStores<AppDbContext>()
     .AddApiEndpoints();
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("eCommerceAPI")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("hyCommerce")));
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
