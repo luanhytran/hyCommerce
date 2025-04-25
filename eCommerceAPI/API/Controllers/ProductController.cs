@@ -15,7 +15,6 @@ public class ProductController : BaseApiController
         _productService = productService;
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetProducts([FromQuery] ProductParams productParams)
     {
