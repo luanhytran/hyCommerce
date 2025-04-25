@@ -1,24 +1,16 @@
 ﻿using hyCommerce.API.RequestHelpers;
-using hyCommerce.Core.Contracts.Services;
 using hyCommerce.Core.Models;
-using Microsoft.AspNetCore.Authorization;
+using hyCommerce.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hyCommerce.API.Controllers;
 
-public class ProductController : BaseApiController
+public class ProductController(IProductService productService) : BaseApiController
 {
-    private readonly IProductService _productService;
-
-    public ProductController(IProductService productService)
-    {
-        _productService = productService;
-    }
-
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetProducts([FromQuery] ProductParams productParams)
     {
-        var result = await _productService.GetProducts(productParams);
+        var result = await productService.GetProducts(productParams);
 
         if (result.IsSuccess) 
             return Ok(result.Data);
@@ -29,7 +21,7 @@ public class ProductController : BaseApiController
     [HttpGet("{id}", Name = "GetProduct")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
-        var result = await _productService.GetProduct(id);
+        var result = await productService.GetProduct(id);
 
         if (result.IsSuccess) 
             return Ok(result.Data);
@@ -40,7 +32,7 @@ public class ProductController : BaseApiController
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
-        var result = await _productService.CreateProduct(product);
+        var result = await productService.CreateProduct(product);
 
         if (result.IsSuccess)
             return CreatedAtRoute("GetProduct", new { id = result.Data?.Id }, result.Data);
@@ -51,7 +43,7 @@ public class ProductController : BaseApiController
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
-        var result = await _productService.DeleteProduct(id);
+        var result = await productService.DeleteProduct(id);
 
         if (result.IsSuccess)
             return NoContent();
