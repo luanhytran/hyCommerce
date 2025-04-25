@@ -1,28 +1,27 @@
 ﻿using hyCommerce.API.RequestHelpers;
 using hyCommerce.Core.Common;
-using hyCommerce.Core.Contracts;
-using hyCommerce.Core.Contracts.Repositories;
-using hyCommerce.Core.Contracts.Services;
 using hyCommerce.Core.Models;
+using hyCommerce.Infrastructures.Persistence;
+using hyCommerce.Infrastructures.Persistence.Repositories;
 
 namespace hyCommerce.Core.Services;
 
-public class ProductService : IProductService
+public interface IProductService
 {
-    private readonly IProductRepository _productRepository;
-    private readonly IUnitOfWork _unitOfWork;
+    public Task<Result<List<Product>>> GetProducts(ProductParams productParams);
+    public Task<Result<Product>> GetProduct(int id);
+    public Task<Result<Product>> CreateProduct(Product product);
+    public Task<Result<bool>> DeleteProduct(int id);
+}
 
-    public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork)
-    {
-        _productRepository = productRepository;
-        _unitOfWork = unitOfWork;
-    }
-
+public class ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork)
+    : IProductService
+{
     public async Task<Result<List<Product>>> GetProducts(ProductParams productParams)
     {
         try
         {
-            var products = await _productRepository.GetProducts(productParams);
+            var products = await productRepository.GetProducts(productParams);
 
             return Result<List<Product>>.Success(products);
         }
@@ -36,7 +35,7 @@ public class ProductService : IProductService
     {
         try
         {
-            var product = await _productRepository.GetProduct(id);
+            var product = await productRepository.GetProduct(id);
 
             return product != null 
                 ? Result<Product>.Success(product) 
@@ -52,12 +51,12 @@ public class ProductService : IProductService
     {
         try
         {
-            var createdProduct = await _productRepository.CreateProduct(product);
+            var createdProduct = await productRepository.CreateProduct(product);
 
             if (createdProduct == null)
                 return Result<Product>.Failure("Failed to create product");
 
-            await _unitOfWork.SaveAsync();
+            await unitOfWork.SaveAsync();
 
             return Result<Product>.Success(createdProduct);
         }
@@ -69,15 +68,15 @@ public class ProductService : IProductService
 
     public async Task<Result<bool>> DeleteProduct(int id)
     {
-        var product = await _productRepository.GetProduct(id);
+        var product = await productRepository.GetProduct(id);
 
         if (product == null) 
             return Result<bool>.Failure("Product not found");
 
-        var result = await _productRepository.DeleteProduct(id);
+        var result = await productRepository.DeleteProduct(id);
 
         return result
             ? Result<bool>.Success(result) 
             : Result<bool>.Failure("Failed to delete product");
     }
-}
+}   
