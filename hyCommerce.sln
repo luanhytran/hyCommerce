@@ -3,13 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FD6B95F0-CBC0-4463-8B71-C546A2AB3817}"
-	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
-		README.md = README.md
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.API", "src\hyCommerce.API\hyCommerce.API.csproj", "{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Tests", "tests\hyCommerce.Tests\hyCommerce.Tests.csproj", "{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Application", "src\hyCommerce.Application\hyCommerce.Application.csproj", "{8EDA6983-0FC8-8A80-D78B-75FA1F154F83}"
 EndProject
@@ -17,13 +11,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Domain", "src\hy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Infrastructure", "src\hyCommerce.Infrastructure\hyCommerce.Infrastructure.csproj", "{57B2372A-F699-1CEE-67DC-B874F1ACDB7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Notification", "src\hyCommerce.Notification\hyCommerce.Notification.csproj", "{3D646A43-B3BE-3D11-89F3-2CB68BBD303C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Tests", "tests\hyCommerce.Tests\hyCommerce.Tests.csproj", "{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FD6B95F0-CBC0-4463-8B71-C546A2AB3817}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F58DA8AE-F5E4-412E-B604-04BDC9516712}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A3AB9F23-0216-45BA-9949-114C2965BB11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.API", "src\hyCommerce.API\hyCommerce.API.csproj", "{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Notification", "src\hyCommerce.Notification\hyCommerce.Notification.csproj", "{3D646A43-B3BE-3D11-89F3-2CB68BBD303C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +30,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8EDA6983-0FC8-8A80-D78B-75FA1F154F83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8EDA6983-0FC8-8A80-D78B-75FA1F154F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EDA6983-0FC8-8A80-D78B-75FA1F154F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,27 +46,27 @@ Global
 		{57B2372A-F699-1CEE-67DC-B874F1ACDB7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57B2372A-F699-1CEE-67DC-B874F1ACDB7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57B2372A-F699-1CEE-67DC-B874F1ACDB7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3D646A43-B3BE-3D11-89F3-2CB68BBD303C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3D646A43-B3BE-3D11-89F3-2CB68BBD303C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D646A43-B3BE-3D11-89F3-2CB68BBD303C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D646A43-B3BE-3D11-89F3-2CB68BBD303C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {5A648324-DBC2-45DE-9A8C-C317D1C06EEE}
-	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167} = {F58DA8AE-F5E4-412E-B604-04BDC9516712}
+		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5} = {A3AB9F23-0216-45BA-9949-114C2965BB11}
 		{8EDA6983-0FC8-8A80-D78B-75FA1F154F83} = {F58DA8AE-F5E4-412E-B604-04BDC9516712}
 		{38DE4521-832E-E3C2-AC87-BA15B80C8C5C} = {F58DA8AE-F5E4-412E-B604-04BDC9516712}
 		{57B2372A-F699-1CEE-67DC-B874F1ACDB7A} = {F58DA8AE-F5E4-412E-B604-04BDC9516712}
+		{C4F2D1D4-EBA9-BFA4-C031-B356E5EF1167} = {F58DA8AE-F5E4-412E-B604-04BDC9516712}
 		{3D646A43-B3BE-3D11-89F3-2CB68BBD303C} = {F58DA8AE-F5E4-412E-B604-04BDC9516712}
-		{1B23ED41-37C7-9317-1543-72DF2BBD1DF5} = {A3AB9F23-0216-45BA-9949-114C2965BB11}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A648324-DBC2-45DE-9A8C-C317D1C06EEE}
 	EndGlobalSection
 EndGlobal

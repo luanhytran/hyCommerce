@@ -1,5 +1,4 @@
-﻿using System.Web;
-using hyCommerce.Application.DTOs;
+﻿using hyCommerce.Application.DTOs;
 using hyCommerce.Application.Services;
 using hyCommerce.Domain.Entities;
 using hyCommerce.Notification.Providers;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Web;
 
 namespace hyCommerce.API.Controllers
 {
@@ -19,11 +19,11 @@ namespace hyCommerce.API.Controllers
             var user = await userManager.FindByNameAsync(loginDto.UserName);
 
             if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password))
-                return Unauthorized("Invalid credentials");;
-            
-            if(!user.EmailConfirmed)
+                return Unauthorized("Invalid credentials");
+
+            if (!user.EmailConfirmed)
                 return Unauthorized("Email not confirmed");
-            
+
             return await tokenService.CreateTokenAsync(user);
         }
 
@@ -42,11 +42,11 @@ namespace hyCommerce.API.Controllers
             }
 
             await userManager.AddToRoleAsync(user, "Member");
-            
+
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            
+
             var encodedToken = HttpUtility.UrlEncode(token);
-            
+
             var confirmationLink = Url.Action("ConfirmEmail", "Account", new
             {
                 userId = user.Id,
@@ -70,20 +70,20 @@ namespace hyCommerce.API.Controllers
         public async Task<ActionResult> ConfirmEmail(string userId, string token)
         {
             var user = await userManager.FindByIdAsync(userId);
-            
+
             if (user == null)
                 return BadRequest("User not found");
-            
+
             var decodedToken = HttpUtility.UrlDecode(token);
-            
+
             var result = await userManager.ConfirmEmailAsync(user, decodedToken);
 
             if (result.Succeeded)
                 return Ok("Email confirmed successfully");
-            
+
             return BadRequest("Invalid token or email confirmation failed");
         }
-        
+
         [HttpPost("refresh-token")]
         public async Task<ActionResult<AuthResult>> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {
@@ -103,10 +103,10 @@ namespace hyCommerce.API.Controllers
         public async Task<ActionResult> RevokeToken([FromBody] RevokeTokenDto revokeTokenDto)
         {
             var success = await tokenService.RevokeRefreshTokenAsync(revokeTokenDto.Token);
-            
+
             if (!success)
                 return NotFound("Token not found");
-                
+
             return Ok("Token revoked");
         }
     }

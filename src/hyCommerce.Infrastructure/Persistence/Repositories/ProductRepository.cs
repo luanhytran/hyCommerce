@@ -47,7 +47,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
             CategoryId = product.CategoryId,
             BrandId = product.BrandId
         };
-        
+
         await context.Products.AddAsync(newProduct);
 
         return newProduct;
@@ -57,11 +57,11 @@ public class ProductRepository(AppDbContext context) : IProductRepository
     {
         var product = await context.Products.FindAsync(id);
 
-        if (product == null) 
+        if (product == null)
             return false;
-        
+
         context.Products.Remove(product);
-        
+
         return await context.SaveChangesAsync() > 0;
     }
 }

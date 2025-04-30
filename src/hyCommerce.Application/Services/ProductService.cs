@@ -37,11 +37,11 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
         {
             var product = await productRepository.GetProduct(id);
 
-            return product != null 
-                ? Result<Product>.Success(product) 
+            return product != null
+                ? Result<Product>.Success(product)
                 : Result<Product>.Failure("No product found");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return Result<Product>.Failure($"Error retrieving product: {ex.Message}");
         }
@@ -70,13 +70,13 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
     {
         var product = await productRepository.GetProduct(id);
 
-        if (product == null) 
+        if (product == null)
             return Result<bool>.Failure("Product not found");
 
         var result = await productRepository.DeleteProduct(id);
 
         return result
-            ? Result<bool>.Success(result) 
+            ? Result<bool>.Success(result)
             : Result<bool>.Failure("Failed to delete product");
     }
-}   
+}

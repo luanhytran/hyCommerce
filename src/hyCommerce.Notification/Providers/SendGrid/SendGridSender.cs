@@ -3,7 +3,7 @@ using SendGrid.Helpers.Mail;
 
 namespace hyCommerce.Notification.Providers.SendGrid
 {
-    public class SendGridSender(ISendGridClient sendGridClient, 
+    public class SendGridSender(ISendGridClient sendGridClient,
         SendGridOptions sendGridOptions, ILogger<SendGridSender> logger) : IEmailSender
     {
         private readonly ISendGridClient _sendGridClient = sendGridClient;

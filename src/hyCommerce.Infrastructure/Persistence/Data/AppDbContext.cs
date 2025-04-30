@@ -41,13 +41,13 @@ public class AppDbContext : IdentityDbContext<User, Role, int>
 
         builder.Entity<RefreshToken>()
             .HasKey(rt => rt.Id);
-            
+
         builder.Entity<Role>()
             .HasData(
                 new Role { Id = 1, Name = "Member", NormalizedName = "MEMBER" },
                 new Role { Id = 2, Name = "Admin", NormalizedName = "ADMIN" }
             );
-        
+
         builder.Entity<OrderItem>()
             .OwnsOne(oi => oi.ProductItemOrdered, pio => { pio.WithOwner(); });
 

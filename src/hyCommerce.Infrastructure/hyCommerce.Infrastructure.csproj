@@ -21,10 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Persistence\Data\Migrations\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\hyCommerce.Domain\hyCommerce.Domain.csproj" />
     </ItemGroup>
 

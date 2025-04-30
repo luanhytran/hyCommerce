@@ -1,16 +1,16 @@
+using hyCommerce.Application.Services;
+using hyCommerce.Domain.Entities;
+using hyCommerce.Domain.Interfaces;
+using hyCommerce.Infrastructure.Persistence;
+using hyCommerce.Infrastructure.Persistence.Data;
+using hyCommerce.Infrastructure.Persistence.Repositories;
+using hyCommerce.Notification;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using hyCommerce.Notification;
-using hyCommerce.Application.Services;
-using hyCommerce.Infrastructure.Persistence;
-using hyCommerce.Infrastructure.Persistence.Repositories;
-using hyCommerce.Infrastructure.Persistence.Data;
-using hyCommerce.Domain.Entities;
-using hyCommerce.Domain.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,11 +61,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityCore<User>(opt => {
-        opt.User.RequireUniqueEmail = true;
-        opt.Password.RequireNonAlphanumeric = false;
-        opt.SignIn.RequireConfirmedEmail = true;
-    })
+builder.Services.AddIdentityCore<User>(opt =>
+{
+    opt.User.RequireUniqueEmail = true;
+    opt.Password.RequireNonAlphanumeric = false;
+    opt.SignIn.RequireConfirmedEmail = true;
+})
     .AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddApiEndpoints();

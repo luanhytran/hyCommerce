@@ -37,7 +37,7 @@ namespace hyCommerce.Domain.Extensions
                 brands.AddRange(brand.ToLower().Split(",").ToList());
 
             query = query.Where(
-                p => categories.Count == 0 || 
+                p => categories.Count == 0 ||
                 categories.Contains(p.Category.Name.ToLower()));
 
             query = query.Where(

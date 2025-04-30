@@ -12,7 +12,7 @@ public class ProductController(IProductService productService) : BaseApiControll
     {
         var result = await productService.GetProducts(productParams);
 
-        if (result.IsSuccess) 
+        if (result.IsSuccess)
             return Ok(result.Data);
 
         return BadRequest(result.ErrorMessage);
@@ -23,7 +23,7 @@ public class ProductController(IProductService productService) : BaseApiControll
     {
         var result = await productService.GetProduct(id);
 
-        if (result.IsSuccess) 
+        if (result.IsSuccess)
             return Ok(result.Data);
 
         return NotFound(result.ErrorMessage);

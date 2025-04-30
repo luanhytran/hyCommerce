@@ -1,14 +1,14 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using hyCommerce.Application.DTOs;
+﻿using hyCommerce.Application.DTOs;
 using hyCommerce.Domain.Entities;
 using hyCommerce.Infrastructure.Persistence.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace hyCommerce.Application.Services;
 
@@ -26,9 +26,9 @@ public class TokenService(IConfiguration config, UserManager<User> userManager, 
     {
         var accessToken = await GenerateTokenAsync(user);
         var refreshToken = GenerateRefreshToken(user);
-        
+
         context.RefreshTokens.Add(refreshToken);
-        
+
         user.RefreshTokens.Add(refreshToken);
 
         await context.SaveChangesAsync();
@@ -96,7 +96,7 @@ public class TokenService(IConfiguration config, UserManager<User> userManager, 
             ?? throw new SecurityTokenException("User not found");
 
         refreshToken.Revoked = DateTime.UtcNow;
-        
+
         await context.SaveChangesAsync();
 
         var result = await CreateTokenAsync(user);
@@ -107,7 +107,7 @@ public class TokenService(IConfiguration config, UserManager<User> userManager, 
     public async Task<bool> RevokeRefreshTokenAsync(string token)
     {
         var refreshToken = await context.RefreshTokens
-            .SingleOrDefaultAsync(rt => rt.Token == token) 
+            .SingleOrDefaultAsync(rt => rt.Token == token)
             ?? throw new SecurityTokenException("Invalid refresh token");
 
         if (!refreshToken.IsActive)
@@ -116,7 +116,7 @@ public class TokenService(IConfiguration config, UserManager<User> userManager, 
         refreshToken.Revoked = DateTime.UtcNow;
 
         await context.SaveChangesAsync();
-        
+
         return true;
     }
 }

@@ -25,14 +25,15 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
 
     public async Task CommitTransactionAsync()
     {
-        if (!HasActiveTransaction) 
+        if (!HasActiveTransaction)
             throw new InvalidOperationException("No active transaction");
-        
+
         try
         {
             await context.SaveChangesAsync();
             await _currentTransaction.CommitAsync();
-        }catch
+        }
+        catch
         {
             await _currentTransaction.RollbackAsync();
             throw;

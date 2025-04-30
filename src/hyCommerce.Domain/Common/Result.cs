@@ -11,8 +11,8 @@ public class Result<T>
         IsSuccess = isSuccess;
         Data = data;
         ErrorMessage = errorMessage;
-    }   
-    
-    public static Result<T> Success(T data) => new Result<T>( true, data, null);
+    }
+
+    public static Result<T> Success(T data) => new Result<T>(true, data, null);
     public static Result<T> Failure(string errorMessage) => new Result<T>(false, default, errorMessage);
 }

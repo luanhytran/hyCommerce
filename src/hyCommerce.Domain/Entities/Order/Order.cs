@@ -1,5 +1,4 @@
-﻿using hyCommerce.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace hyCommerce.Domain.Entities.Order
 {
@@ -22,7 +21,7 @@ namespace hyCommerce.Domain.Entities.Order
 
         public decimal GetTotal()
         {
-               return Subtotal + DeliveryFee - Discount.Amount;
+            return Subtotal + DeliveryFee - Discount.Amount;
         }
     }
 }

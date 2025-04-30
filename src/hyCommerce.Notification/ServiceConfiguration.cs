@@ -13,7 +13,7 @@ namespace hyCommerce.Notification
             services.AddOptions<SendGridOptions>().Bind(configuration.GetSection("MessageSender"));
             services.AddOptions<EmailTemplateId>().Bind(configuration.GetSection("EmailTemplateIds"));
 
-            var provider = configuration["MessageSender:Provider"] 
+            var provider = configuration["MessageSender:Provider"]
                 ?? throw new Exception("The 'MessageSender:Provider' is not configured");
 
             if (provider == MessageSenderProviders.Smtp.ToString())
