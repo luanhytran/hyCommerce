@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\hyCommerce.Domain\hyCommerce.Domain.csproj" />
+      <ProjectReference Include="..\..\Core\hyCommerce.Domain\hyCommerce.Domain.csproj" />
     </ItemGroup>
 
 </Project>
