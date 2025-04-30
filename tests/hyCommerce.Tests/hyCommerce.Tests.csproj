@@ -20,7 +20,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Core\hyCommerce\hyCommerce.csproj" />
+      <ProjectReference Include="..\..\src\hyCommerce.Application\hyCommerce.Application.csproj" />
+      <ProjectReference Include="..\..\src\hyCommerce.Domain\hyCommerce.Domain.csproj" />
+      <ProjectReference Include="..\..\src\hyCommerce.Infrastructure\hyCommerce.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

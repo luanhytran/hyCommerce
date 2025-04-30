@@ -1,10 +1,10 @@
 ﻿using AutoFixture;
-using hyCommerce.API.RequestHelpers;
-using hyCommerce.Core.Models;
-using hyCommerce.Core.Services;
 using FluentAssertions;
-using hyCommerce.Infrastructures.Persistence;
-using hyCommerce.Infrastructures.Persistence.Repositories;
+using hyCommerce.Application.Services;
+using hyCommerce.Domain.Entities;
+using hyCommerce.Domain.Entities.Helpers;
+using hyCommerce.Domain.Interfaces;
+using hyCommerce.Infrastructure.Persistence;
 using Moq;
 
 namespace hyCommerce.Tests.Services
