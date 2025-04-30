@@ -20,9 +20,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\hyCommerce.Application\hyCommerce.Application.csproj" />
-      <ProjectReference Include="..\..\src\hyCommerce.Domain\hyCommerce.Domain.csproj" />
-      <ProjectReference Include="..\..\src\hyCommerce.Infrastructure\hyCommerce.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\src\Core\hyCommerce.Application\hyCommerce.Application.csproj" />
+      <ProjectReference Include="..\..\src\Core\hyCommerce.Domain\hyCommerce.Domain.csproj" />
+      <ProjectReference Include="..\..\src\Core\hyCommerce.Infrastructure\hyCommerce.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
