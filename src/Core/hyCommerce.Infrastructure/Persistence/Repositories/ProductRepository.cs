@@ -1,11 +1,18 @@
 ﻿using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Entities.Helpers;
 using hyCommerce.Domain.Extensions;
-using hyCommerce.Domain.Interfaces;
 using hyCommerce.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace hyCommerce.Infrastructure.Persistence.Repositories;
+
+public interface IProductRepository
+{
+    public Task<List<Product>> GetProducts(ProductParams productParams);
+    public Task<Product?> GetProduct(int id);
+    public Task<Product?> CreateProduct(Product product);
+    public Task<bool> DeleteProduct(int id);
+}
 
 public class ProductRepository(AppDbContext context) : IProductRepository
 {
