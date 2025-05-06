@@ -3,8 +3,8 @@ using FluentAssertions;
 using hyCommerce.Application.Services;
 using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Entities.Helpers;
-using hyCommerce.Domain.Interfaces;
 using hyCommerce.Infrastructure.Persistence;
+using hyCommerce.Infrastructure.Persistence.Repositories;
 using Moq;
 
 namespace hyCommerce.Tests.Services
