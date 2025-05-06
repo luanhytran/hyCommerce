@@ -1,6 +1,5 @@
 using hyCommerce.Application.Services;
 using hyCommerce.Domain.Entities;
-using hyCommerce.Domain.Interfaces;
 using hyCommerce.Infrastructure.Persistence;
 using hyCommerce.Infrastructure.Persistence.Data;
 using hyCommerce.Infrastructure.Persistence.Repositories;
