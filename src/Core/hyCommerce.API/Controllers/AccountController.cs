@@ -1,7 +1,6 @@
 ﻿using hyCommerce.Application.DTOs;
 using hyCommerce.Application.Services;
 using hyCommerce.Domain.Entities;
-using hyCommerce.Notification.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,37 +9,35 @@ using System.Web;
 
 namespace hyCommerce.API.Controllers
 {
-    public class AccountController(UserManager<User> userManager, ITokenService tokenService, IEmailSender emailSender)
+    public class AccountController(UserManager<User> userManager, ITokenService tokenService, IIdentityService identityService)
         : BaseApiController
     {
         [HttpPost("login")]
         public async Task<ActionResult<AuthResult>> Login(LoginDto loginDto)
         {
-            var user = await userManager.FindByNameAsync(loginDto.UserName);
+            var result = await identityService.Login(loginDto);
 
-            if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password))
-                return Unauthorized("Invalid credentials");
-
-            if (!user.EmailConfirmed)
-                return Unauthorized("Email not confirmed");
-
-            return await tokenService.CreateTokenAsync(user);
+            if (result.IsSuccess)
+                return Ok(result.Data);
+            
+            return BadRequest(result.ErrorMessage);
         }
 
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser(RegisterDto registerDto)
         {
             var user = new User { Email = registerDto.Email, UserName = registerDto.Email };
-            var result = await userManager.CreateAsync(user, registerDto.Password);
+            
+            var createUserResult = await userManager.CreateAsync(user, registerDto.Password);
 
-            if (!result.Succeeded)
+            if (!createUserResult.Succeeded)
             {
-                foreach (var error in result.Errors)
+                foreach (var error in createUserResult.Errors)
                     ModelState.AddModelError(error.Code, error.Description);
 
                 return ValidationProblem();
             }
-
+            
             await userManager.AddToRoleAsync(user, "Member");
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -53,35 +50,23 @@ namespace hyCommerce.API.Controllers
                 token = encodedToken,
             }, Request.Scheme);
 
-            var emailRequest = new EmailRequest<object>
-            {
-                To = user.Email,
-                Subject = "Confirm your account",
-                Body = $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Email</a>",
-                IsHtml = true,
-            };
-
-            await emailSender.SendEmailAsync(emailRequest);
-
-            return Ok("Registration successful. Please check your email to confirm your account.");
+            var result = await identityService.RegisterUser(user, confirmationLink);
+            
+            if (result.IsSuccess)
+                return Ok(result.Message);
+            
+            return BadRequest(result.Message);
         }
 
         [HttpGet("confirm-email")]
         public async Task<ActionResult> ConfirmEmail(string userId, string token)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var result = await identityService.ConfirmEmail(userId, token);
 
-            if (user == null)
-                return BadRequest("User not found");
+            if (result.IsSuccess)
+                return Ok(result.Message);
 
-            var decodedToken = HttpUtility.UrlDecode(token);
-
-            var result = await userManager.ConfirmEmailAsync(user, decodedToken);
-
-            if (result.Succeeded)
-                return Ok("Email confirmed successfully");
-
-            return BadRequest("Invalid token or email confirmation failed");
+            return BadRequest(result.Message);
         }
 
         [HttpPost("refresh-token")]
