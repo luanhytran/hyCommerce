@@ -13,7 +13,7 @@ public interface IIdentityService
 {
     Task<Result<AuthResult>> Login(LoginDto loginDto);
 
-    Task<Result> RegisterUser(User user, string? confirmationLink);
+    Task<Result> RegisterUser(User user, string confirmationLink);
 
     Task<Result> ConfirmEmail(string userId, string token);
 }
@@ -79,7 +79,7 @@ public class IdentityService(UserManager<User> userManager, ITokenService tokenS
         }
         catch (Exception ex)
         {
-            return Result.Failure($"Error confirming product: {ex.Message}");
+            return Result.Failure($"Error confirming email: {ex.Message}");
         }
     }
 }
