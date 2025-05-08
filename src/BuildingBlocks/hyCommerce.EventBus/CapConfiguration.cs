@@ -1,6 +1,7 @@
 ﻿using DotNetCore.CAP;
 using DotNetCore.CAP.Messages;
 using hyCommerce.EventBus.Event;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -9,14 +10,17 @@ namespace hyCommerce.EventBus;
 
 public static class CapConfiguration
 {
-    public static IServiceCollection AddCap(this IServiceCollection services, IConfiguration configuration, Action<RabbitMQOptions> configures = null)
+    public static IServiceCollection AddCap<TContext>(this IServiceCollection services, IConfiguration configuration, Action<RabbitMQOptions> configures = null)
+        where TContext : DbContext
     {
         var settings = new CapSettings();
 
-        configuration.Bind(CapSettings.Name, settings);
+        configuration.Bind("CapSettings", settings);
 
         services.AddCap(options =>
         {
+            options.UseEntityFramework<TContext>();
+
             if (settings.Provider.Equals("RabbitMq"))
             {
                 options.UseRabbitMQ(configure =>
@@ -32,7 +36,7 @@ public static class CapConfiguration
                 options.UseAzureServiceBus(settings.Host);
             }
 
-            options.UsePostgreSql(settings.ConnectionString);
+            options.UseDashboard();
 
             options.FailedRetryCount = 5;
 

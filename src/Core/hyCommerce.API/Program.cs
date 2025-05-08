@@ -72,6 +72,7 @@ builder.Services.AddIdentityCore<User>(opt =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Docker_Postgres")));
 
+builder.Services.AddCap<AppDbContext>(builder.Configuration);
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
