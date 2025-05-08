@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\BuildingBlocks\hyCommerce.Common\hyCommerce.Common.csproj" />
       <ProjectReference Include="..\hyCommerce.Domain\hyCommerce.Domain.csproj" />
       <ProjectReference Include="..\hyCommerce.Infrastructure\hyCommerce.Infrastructure.csproj" />
     </ItemGroup>
