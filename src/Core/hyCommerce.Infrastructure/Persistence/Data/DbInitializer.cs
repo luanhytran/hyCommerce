@@ -16,7 +16,9 @@ public class DbInitializer
             {
                 UserName = "bob",
                 Email = "bob@test.com",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                CreatedBy = adminUser,
+                CreatedAt = now
             };
 
             await userManager.CreateAsync(user, "Pa$$w0rd");
@@ -26,7 +28,9 @@ public class DbInitializer
             {
                 UserName = adminUser,
                 Email = "admin@test.com",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                CreatedBy = adminUser,
+                CreatedAt = now
             };
 
             await userManager.CreateAsync(admin, "Pa$$w0rd");

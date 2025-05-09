@@ -327,6 +327,32 @@ namespace hyCommerce.Infrastructure.Persistence.Data.Migrations
                 table: "BasketItems",
                 type: "text",
                 nullable: true);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "CreatedAt",
+                table: "AspNetUsers",
+                type: "timestamp with time zone",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
+            migrationBuilder.AddColumn<string>(
+                name: "CreatedBy",
+                table: "AspNetUsers",
+                type: "text",
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "ModifiedAt",
+                table: "AspNetUsers",
+                type: "timestamp with time zone",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "ModifiedBy",
+                table: "AspNetUsers",
+                type: "text",
+                nullable: true);
         }
 
         /// <inheritdoc />
@@ -523,6 +549,22 @@ namespace hyCommerce.Infrastructure.Persistence.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "ModifiedBy",
                 table: "BasketItems");
+
+            migrationBuilder.DropColumn(
+                name: "CreatedAt",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "CreatedBy",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "ModifiedAt",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "ModifiedBy",
+                table: "AspNetUsers");
 
             migrationBuilder.RenameColumn(
                 name: "ProductItemOrdered_Id",

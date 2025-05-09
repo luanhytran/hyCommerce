@@ -12,7 +12,7 @@ using hyCommerce.Infrastructure.Persistence.Data;
 namespace hyCommerce.Infrastructure.Persistence.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250509130714_AddAuditEntity")]
+    [Migration("20250509143008_AddAuditEntity")]
     partial class AddAuditEntity
     {
         /// <inheritdoc />
@@ -579,6 +579,13 @@ namespace hyCommerce.Infrastructure.Persistence.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -591,6 +598,12 @@ namespace hyCommerce.Infrastructure.Persistence.Data.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
