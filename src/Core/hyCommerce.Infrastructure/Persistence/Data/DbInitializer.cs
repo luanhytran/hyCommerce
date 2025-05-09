@@ -7,6 +7,9 @@ public class DbInitializer
 {
     public static async Task Initialize(AppDbContext context, UserManager<User> userManager)
     {
+        var now = DateTime.UtcNow;
+        const string adminUser = "admin";
+        
         if (!userManager.Users.Any())
         {
             var user = new User
@@ -21,7 +24,7 @@ public class DbInitializer
 
             var admin = new User
             {
-                UserName = "admin",
+                UserName = adminUser,
                 Email = "admin@test.com",
                 EmailConfirmed = true
             };
@@ -34,25 +37,25 @@ public class DbInitializer
 
         var brands = new List<Brand>
         {
-            new Brand { Name = "Angular" },
-            new Brand { Name = "NetCore" },
-            new Brand { Name = "React" },
-            new Brand { Name = "TypeScript" },
-            new Brand { Name = "VS Code" },
-            new Brand { Name = "Redis" }
+            new Brand { Name = "Angular", CreatedBy = adminUser, CreatedAt = now },
+            new Brand { Name = "NetCore", CreatedBy = adminUser, CreatedAt = now },
+            new Brand { Name = "React", CreatedBy = adminUser, CreatedAt = now },
+            new Brand { Name = "TypeScript", CreatedBy = adminUser, CreatedAt = now },
+            new Brand { Name = "VS Code", CreatedBy = adminUser, CreatedAt = now },
+            new Brand { Name = "Redis", CreatedBy = adminUser, CreatedAt = now }
         };
 
         var categories = new List<Category>
         {
-            new Category { Name = "Boards" },
-            new Category { Name = "Hats" },
-            new Category { Name = "Gloves" },
-            new Category { Name = "Boots" }
+            new Category { Name = "Boards", CreatedBy = adminUser, CreatedAt = now },
+            new Category { Name = "Hats", CreatedBy = adminUser, CreatedAt = now },
+            new Category { Name = "Gloves", CreatedBy = adminUser, CreatedAt = now },
+            new Category { Name = "Boots", CreatedBy = adminUser, CreatedAt = now }
         };
 
         context.Brands.AddRange(brands);
         context.Categories.AddRange(categories);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var products = new List<Product>
         {
@@ -65,7 +68,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "Angular"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -76,7 +81,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "Angular"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -87,7 +94,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "NetCore"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -98,7 +107,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "NetCore"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -109,7 +120,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "React"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -120,7 +133,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "TypeScript"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -131,7 +146,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "NetCore"),
                 Category = categories.First(c => c.Name == "Hats"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -142,7 +159,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "React"),
                 Category = categories.First(c => c.Name == "Hats"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -153,7 +172,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "React"),
                 Category = categories.First(c => c.Name == "Hats"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -164,7 +185,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "VS Code"),
                 Category = categories.First(c => c.Name == "Gloves"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -175,7 +198,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "VS Code"),
                 Category = categories.First(c => c.Name == "Gloves"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -186,7 +211,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "React"),
                 Category = categories.First(c => c.Name == "Gloves"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -197,7 +224,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "React"),
                 Category = categories.First(c => c.Name == "Gloves"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -208,7 +237,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "Redis"),
                 Category = categories.First(c => c.Name == "Boots"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -219,7 +250,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "NetCore"),
                 Category = categories.First(c => c.Name == "Boots"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -230,7 +263,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "NetCore"),
                 Category = categories.First(c => c.Name == "Boots"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -241,7 +276,9 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "Angular"),
                 Category = categories.First(c => c.Name == "Boots"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
             new Product
             {
@@ -252,11 +289,13 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "Angular"),
                 Category = categories.First(c => c.Name == "Boots"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now
             },
         };
 
         context.Products.AddRange(products);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

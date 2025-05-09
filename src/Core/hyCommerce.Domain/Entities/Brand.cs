@@ -1,8 +1,7 @@
 ﻿namespace hyCommerce.Domain.Entities
 {
-    public class Brand
+    public class Brand : AuditEntity
     {
-        public int Id { get; set; }
         public required string Name { get; set; }
     }
 }

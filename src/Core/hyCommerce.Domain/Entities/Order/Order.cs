@@ -2,9 +2,8 @@
 
 namespace hyCommerce.Domain.Entities.Order
 {
-    public class Order
+    public class Order : AuditEntity
     {
-        public int Id { get; set; }
         public int BuyerId { get; set; }
 
         [Required]

@@ -1,8 +1,7 @@
 ﻿namespace hyCommerce.Domain.Entities.Order
 {
-    public class OrderItem
+    public class OrderItem : AuditEntity
     {
-        public int Id { get; set; }
         public required ProductItemOrdered ProductItemOrdered { get; set; }
         public long Price { get; set; }
         public int Quantity { get; set; }

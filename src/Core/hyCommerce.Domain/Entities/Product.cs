@@ -1,8 +1,7 @@
 ﻿namespace hyCommerce.Domain.Entities;
 
-public class Product
+public class Product : AuditEntity
 {
-    public int Id { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
     public long Price { get; set; }
