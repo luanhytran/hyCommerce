@@ -29,6 +29,7 @@
       <ProjectReference Include="..\..\Notification\hyCommerce.Notification\hyCommerce.Notification.csproj" />
       <ProjectReference Include="..\..\Core\hyCommerce.Application\hyCommerce.Application.csproj" />
       <ProjectReference Include="..\..\Core\hyCommerce.Domain\hyCommerce.Domain.csproj" />
+      <ProjectReference Include="..\hyCommerce.Infrastructure\hyCommerce.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

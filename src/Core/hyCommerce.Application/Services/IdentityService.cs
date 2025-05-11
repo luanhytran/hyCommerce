@@ -1,11 +1,10 @@
 using System.Web;
-using Azure.Core;
 using DotNetCore.CAP;
 using hyCommerce.Application.DTOs;
 using hyCommerce.Common.Event;
 using hyCommerce.Domain.Common;
 using hyCommerce.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+using hyCommerce.Infrastructure.Persistence;
 
 namespace hyCommerce.Application.Services;
 
@@ -18,7 +17,7 @@ public interface IIdentityService
     Task<Result> ConfirmEmail(string userId, string token);
 }
 
-public class IdentityService(UserManager<User> userManager, ITokenService tokenService, ICapPublisher capPublisher) : IIdentityService
+public class IdentityService(ApplicationUserManager userManager, ITokenService tokenService, ICapPublisher capPublisher) : IIdentityService
 {
     public async Task<Result<AuthResult>> Login(LoginDto loginDto)
     {

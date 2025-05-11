@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Web;
+using hyCommerce.Infrastructure.Persistence;
 
 namespace hyCommerce.API.Controllers
 {
-    public class AccountController(UserManager<User> userManager, ITokenService tokenService, IIdentityService identityService)
+    public class AccountController(ApplicationUserManager userManager, ITokenService tokenService, IIdentityService identityService)
         : BaseApiController
     {
         [HttpPost("login")]

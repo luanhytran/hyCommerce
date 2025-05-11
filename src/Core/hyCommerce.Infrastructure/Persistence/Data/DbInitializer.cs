@@ -1,14 +1,13 @@
 using hyCommerce.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace hyCommerce.Infrastructure.Persistence.Data;
 
 public class DbInitializer
 {
-    public static async Task Initialize(AppDbContext context, UserManager<User> userManager)
+    public static async Task Initialize(AppDbContext context, ApplicationUserManager userManager)
     {
         var now = DateTime.UtcNow;
-        const string adminUser = "admin";
+        const string adminUser = "System";
         
         if (!userManager.Users.Any())
         {
@@ -17,8 +16,6 @@ public class DbInitializer
                 UserName = "bob",
                 Email = "bob@test.com",
                 EmailConfirmed = true,
-                CreatedBy = adminUser,
-                CreatedAt = now
             };
 
             await userManager.CreateAsync(user, "Pa$$w0rd");
@@ -29,8 +26,6 @@ public class DbInitializer
                 UserName = adminUser,
                 Email = "admin@test.com",
                 EmailConfirmed = true,
-                CreatedBy = adminUser,
-                CreatedAt = now
             };
 
             await userManager.CreateAsync(admin, "Pa$$w0rd");
@@ -41,20 +36,20 @@ public class DbInitializer
 
         var brands = new List<Brand>
         {
-            new Brand { Name = "Angular", CreatedBy = adminUser, CreatedAt = now },
-            new Brand { Name = "NetCore", CreatedBy = adminUser, CreatedAt = now },
-            new Brand { Name = "React", CreatedBy = adminUser, CreatedAt = now },
-            new Brand { Name = "TypeScript", CreatedBy = adminUser, CreatedAt = now },
-            new Brand { Name = "VS Code", CreatedBy = adminUser, CreatedAt = now },
-            new Brand { Name = "Redis", CreatedBy = adminUser, CreatedAt = now }
+            new Brand { Name = "Angular", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Brand { Name = "NetCore", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Brand { Name = "React", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Brand { Name = "TypeScript", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Brand { Name = "VS Code", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Brand { Name = "Redis", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now }
         };
 
         var categories = new List<Category>
         {
-            new Category { Name = "Boards", CreatedBy = adminUser, CreatedAt = now },
-            new Category { Name = "Hats", CreatedBy = adminUser, CreatedAt = now },
-            new Category { Name = "Gloves", CreatedBy = adminUser, CreatedAt = now },
-            new Category { Name = "Boots", CreatedBy = adminUser, CreatedAt = now }
+            new Category { Name = "Boards", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Category { Name = "Hats", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Category { Name = "Gloves", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Category { Name = "Boots", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now }
         };
 
         context.Brands.AddRange(brands);
@@ -74,7 +69,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -87,7 +84,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -100,7 +99,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -113,7 +114,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -126,7 +129,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -139,7 +144,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -152,7 +159,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -165,7 +174,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -178,7 +189,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -191,7 +204,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -204,7 +219,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -217,7 +234,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -230,7 +249,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -243,7 +264,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -256,7 +279,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -269,7 +294,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -282,7 +309,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -295,7 +324,9 @@ public class DbInitializer
                 QuantityInStock = 100,
                 IsDeleted = false,
                 CreatedBy = adminUser,
-                CreatedAt = now
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
         };
 

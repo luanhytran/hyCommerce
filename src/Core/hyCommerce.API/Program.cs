@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using hyCommerce.Domain;
+using hyCommerce.Domain.Repositories;
 using hyCommerce.EventBus;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -67,11 +69,15 @@ builder.Services.AddIdentityCore<User>(opt =>
     opt.Password.RequireNonAlphanumeric = false;
     opt.SignIn.RequireConfirmedEmail = true;
 })
+    .AddUserManager<ApplicationUserManager>()
     .AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddApiEndpoints();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Docker_Postgres")));
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddMailSender(builder.Configuration);
 
@@ -102,7 +108,7 @@ app.MapControllers();
 
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetService<AppDbContext>();
-var userManager = scope.ServiceProvider.GetService<UserManager<User>>();
+var userManager = scope.ServiceProvider.GetService<ApplicationUserManager>();
 
 await DbInitializer.Initialize(context, userManager);
 

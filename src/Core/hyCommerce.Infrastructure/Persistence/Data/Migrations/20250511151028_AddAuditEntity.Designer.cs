@@ -12,7 +12,7 @@ using hyCommerce.Infrastructure.Persistence.Data;
 namespace hyCommerce.Infrastructure.Persistence.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250509143008_AddAuditEntity")]
+    [Migration("20250511151028_AddAuditEntity")]
     partial class AddAuditEntity
     {
         /// <inheritdoc />
@@ -488,21 +488,8 @@ namespace hyCommerce.Infrastructure.Persistence.Data.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("Expires")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("text");
 
                     b.Property<DateTime?>("Revoked")
                         .HasColumnType("timestamp with time zone");

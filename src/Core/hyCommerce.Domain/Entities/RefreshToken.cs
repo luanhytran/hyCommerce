@@ -3,8 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace hyCommerce.Domain.Entities;
 
 [Table("RefreshTokens")]
-public class RefreshToken : AuditEntity
+public class RefreshToken
 {
+    public int Id { get; set; }
     public int UserId { get; set; }
     public string Token { get; set; }
     public DateTime Created { get; set; }

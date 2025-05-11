@@ -1,8 +1,8 @@
-﻿using hyCommerce.Domain.Common;
+﻿using hyCommerce.Domain;
+using hyCommerce.Domain.Common;
 using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Entities.Helpers;
-using hyCommerce.Infrastructure.Persistence;
-using hyCommerce.Infrastructure.Persistence.Repositories;
+using hyCommerce.Domain.Repositories;
 
 namespace hyCommerce.Application.Services;
 

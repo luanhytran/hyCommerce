@@ -44,32 +44,6 @@ namespace hyCommerce.Infrastructure.Persistence.Data.Migrations
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "CreatedAt",
-                table: "RefreshTokens",
-                type: "timestamp with time zone",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
-
-            migrationBuilder.AddColumn<string>(
-                name: "CreatedBy",
-                table: "RefreshTokens",
-                type: "text",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "ModifiedAt",
-                table: "RefreshTokens",
-                type: "timestamp with time zone",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "ModifiedBy",
-                table: "RefreshTokens",
-                type: "text",
-                nullable: true);
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "CreatedAt",
                 table: "Products",
                 type: "timestamp with time zone",
                 nullable: false,
@@ -373,22 +347,6 @@ namespace hyCommerce.Infrastructure.Persistence.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "ModifiedBy",
                 table: "UserAddress");
-
-            migrationBuilder.DropColumn(
-                name: "CreatedAt",
-                table: "RefreshTokens");
-
-            migrationBuilder.DropColumn(
-                name: "CreatedBy",
-                table: "RefreshTokens");
-
-            migrationBuilder.DropColumn(
-                name: "ModifiedAt",
-                table: "RefreshTokens");
-
-            migrationBuilder.DropColumn(
-                name: "ModifiedBy",
-                table: "RefreshTokens");
 
             migrationBuilder.DropColumn(
                 name: "CreatedAt",

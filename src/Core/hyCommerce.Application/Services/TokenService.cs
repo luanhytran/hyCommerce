@@ -1,6 +1,5 @@
 ﻿using hyCommerce.Application.DTOs;
 using hyCommerce.Domain.Entities;
-using hyCommerce.Infrastructure.Persistence.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using hyCommerce.Infrastructure.Persistence.Data;
 
 namespace hyCommerce.Application.Services;
 
@@ -26,7 +26,7 @@ public class TokenService(IConfiguration config, UserManager<User> userManager, 
     {
         var accessToken = await GenerateTokenAsync(user);
         var refreshToken = GenerateRefreshToken(user);
-
+        
         context.RefreshTokens.Add(refreshToken);
 
         user.RefreshTokens.Add(refreshToken);
