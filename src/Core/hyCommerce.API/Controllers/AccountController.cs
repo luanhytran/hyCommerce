@@ -21,7 +21,7 @@ namespace hyCommerce.API.Controllers
             if (result.IsSuccess)
                 return Ok(result.Data);
             
-            return BadRequest(result.ErrorMessage);
+            return Unauthorized(result.ErrorMessage);
         }
 
         [HttpPost("register")]

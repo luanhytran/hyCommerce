@@ -11,8 +11,7 @@ builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Services.AddIdentity<AppDbContext>(builder.Configuration, builder.Environment);
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Docker_Postgres")));
+builder.Services.AddDbContext(builder.Configuration);
 
 builder.Services.AddMailSender(builder.Configuration);
 
