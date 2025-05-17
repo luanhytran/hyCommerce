@@ -1,9 +1,9 @@
+using System.Security.Claims;
 using hyCommerce.Application.DTOs;
 using hyCommerce.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using hyCommerce.Infrastructure.Persistence;
 
 namespace hyCommerce.API.Controllers
 {
@@ -69,6 +69,22 @@ namespace hyCommerce.API.Controllers
                 return NotFound("Token not found");
 
             return Ok("Token revoked");
+        }
+
+        [Authorize]
+        [HttpPut("update-user/{userId}")]
+        public async Task<ActionResult> UpdateUser(string userId, UpdateUserDto updateUserDto)
+        {
+            var currentUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            var isAdmin = User.IsInRole("Admin");
+            
+            var result = await identityService.UpdateUser(currentUserId, userId, updateUserDto, isAdmin);
+            
+            if (result.IsSuccess)
+                return Ok(result.Message);
+            
+            return BadRequest(result.Message);
         }
     }
 }

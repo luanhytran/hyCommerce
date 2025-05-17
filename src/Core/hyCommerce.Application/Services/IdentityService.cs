@@ -16,6 +16,8 @@ public interface IIdentityService
     Task<Result<string>> RegisterUser(string baseUrl, RegisterDto registerDto);
 
     Task<Result> ConfirmEmail(string userId, string token);
+    
+    Task<Result> UpdateUser(string currentUserId, string targetUserId, UpdateUserDto updateUserDto, bool isAdmin);
 }
 
 public class IdentityService(ApplicationUserManager userManager, ITokenService tokenService, ICapPublisher capPublisher) : IIdentityService
@@ -97,6 +99,32 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
         catch (Exception ex)
         {
             return Result.Failure($"Error confirming email: {ex.Message}");
+        }
+    }
+
+    public async Task<Result> UpdateUser(string currentUserId, string targetUserId, UpdateUserDto updateUserDto, bool isAdmin)
+    {
+        try
+        {
+            if (!isAdmin && currentUserId != targetUserId)
+                return Result.Failure("You are not authorized to update this user");
+            
+            var user = await userManager.FindByIdAsync(targetUserId);
+
+            if (user == null)
+                return Result.Failure("User not found");
+
+            user.UserName = updateUserDto.UserName;
+
+            var result = await userManager.UpdateAsync(user);
+
+            return result.Succeeded
+                ? Result.Success("User updated successfully")
+                : Result.Failure($"User update failed: {string.Join("; ", result.Errors.Select(e => e.Description))}");
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure($"Error updating user: {ex.Message}");
         }
     }
 }
