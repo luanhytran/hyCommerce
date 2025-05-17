@@ -27,7 +27,7 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
         }
         catch (Exception ex)
         {
-            return Result<List<Product>>.Failure($"Error retrieving products: {ex.Message}");
+            return Result<List<Product>>.Failure(message: $"Error retrieving products: {ex.Message}");
         }
     }
 
@@ -39,11 +39,11 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
 
             return product != null
                 ? Result<Product>.Success(product)
-                : Result<Product>.Failure("No product found");
+                : Result<Product>.Failure(message: "No product found");
         }
         catch (Exception ex)
         {
-            return Result<Product>.Failure($"Error retrieving product: {ex.Message}");
+            return Result<Product>.Failure(message: $"Error retrieving product: {ex.Message}");
         }
     }
 
@@ -54,7 +54,7 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
             var createdProduct = await productRepository.CreateProduct(product);
 
             if (createdProduct == null)
-                return Result<Product>.Failure("Failed to create product");
+                return Result<Product>.Failure(message: "Failed to create product");
 
             await unitOfWork.SaveAsync();
 
@@ -62,7 +62,7 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
         }
         catch (Exception ex)
         {
-            return Result<Product>.Failure($"Error creating product: {ex.Message}");
+            return Result<Product>.Failure(message: $"Error creating product: {ex.Message}");
         }
     }
 
@@ -71,12 +71,12 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
         var product = await productRepository.GetProduct(id);
 
         if (product == null)
-            return Result<bool>.Failure("Product not found");
+            return Result<bool>.Failure(message: "Product not found");
 
         var result = await productRepository.DeleteProduct(id);
 
         return result
             ? Result<bool>.Success(result)
-            : Result<bool>.Failure("Failed to delete product");
+            : Result<bool>.Failure(message: "Failed to delete product");
     }
 }

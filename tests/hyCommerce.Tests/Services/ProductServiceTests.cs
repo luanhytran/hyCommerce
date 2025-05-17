@@ -38,7 +38,7 @@ namespace hyCommerce.Tests.Services
 
             result.Data.Should().NotBeNull();
             result.IsSuccess.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
+            result.Message.Should().BeNull();
             result.Data.Should().HaveCount(3);
 
             _productRepositoryMock.Verify(repo => repo.GetProducts(It.IsAny<ProductParams>()), Times.Once);
@@ -60,7 +60,7 @@ namespace hyCommerce.Tests.Services
             //Assert
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
+            result.Message.Should().BeNull();
             result.Data.Should().NotBeNull();
             result.Data.Id.Should().Be(1);
 

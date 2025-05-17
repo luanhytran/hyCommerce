@@ -4,17 +4,17 @@ public class Result<T>
 {
     public bool IsSuccess { get; set; }
     public T? Data { get; set; }
-    public string? ErrorMessage { get; set; }
+    public string? Message { get; set; }
 
-    private Result(bool isSuccess, T? data, string? errorMessage)
+    private Result(bool isSuccess, T? data = default, string? message = null)
     {
         IsSuccess = isSuccess;
         Data = data;
-        ErrorMessage = errorMessage;
+        Message = message;
     }
 
-    public static Result<T> Success(T data) => new Result<T>(true, data, null);
-    public static Result<T> Failure(string errorMessage) => new Result<T>(false, default, errorMessage);
+    public static Result<T> Success(T? data = default, string? message = null) => new Result<T>(true, data, message);
+    public static Result<T> Failure(T? data = default, string? message = null) => new Result<T>(false, data, message);
 }
 
 public class Result

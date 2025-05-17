@@ -15,7 +15,7 @@ public class ProductController(IProductService productService) : BaseApiControll
         if (result.IsSuccess)
             return Ok(result.Data);
 
-        return BadRequest(result.ErrorMessage);
+        return BadRequest(result.Message);
     }
 
     [HttpGet("{id}", Name = "GetProduct")]
@@ -26,7 +26,7 @@ public class ProductController(IProductService productService) : BaseApiControll
         if (result.IsSuccess)
             return Ok(result.Data);
 
-        return NotFound(result.ErrorMessage);
+        return NotFound(result.Message);
     }
 
     [HttpPost]
@@ -37,7 +37,7 @@ public class ProductController(IProductService productService) : BaseApiControll
         if (result.IsSuccess)
             return CreatedAtRoute("GetProduct", new { id = result.Data?.Id }, result.Data);
 
-        return BadRequest(result.ErrorMessage);
+        return BadRequest(result.Message);
     }
 
     [HttpDelete("{id}")]
@@ -48,8 +48,8 @@ public class ProductController(IProductService productService) : BaseApiControll
         if (result.IsSuccess)
             return NoContent();
 
-        return result.ErrorMessage?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true
-            ? NotFound(result.ErrorMessage)
-            : BadRequest(result.ErrorMessage);
+        return result.Message?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true
+            ? NotFound(result.Message)
+            : BadRequest(result.Message);
     }
 }

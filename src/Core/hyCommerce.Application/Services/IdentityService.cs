@@ -1,6 +1,7 @@
 using System.Web;
 using DotNetCore.CAP;
 using hyCommerce.Application.DTOs;
+using hyCommerce.Common.Constants;
 using hyCommerce.Common.Event;
 using hyCommerce.Domain.Common;
 using hyCommerce.Domain.Entities;
@@ -12,7 +13,7 @@ public interface IIdentityService
 {
     Task<Result<AuthResult>> Login(LoginDto loginDto);
 
-    Task<Result> RegisterUser(User user, string confirmationLink);
+    Task<Result<string>> RegisterUser(string baseUrl, RegisterDto registerDto);
 
     Task<Result> ConfirmEmail(string userId, string token);
 }
@@ -26,10 +27,10 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
             var user = await userManager.FindByNameAsync(loginDto.UserName);
 
             if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password))
-                return Result<AuthResult>.Failure("Invalid credentials");
+                return Result<AuthResult>.Failure(message: "Invalid credentials");
 
             if (!user.EmailConfirmed)
-                return Result<AuthResult>.Failure("Email not confirmed");
+                return Result<AuthResult>.Failure(message: "Email not confirmed");
 
             var authResult = await tokenService.CreateTokenAsync(user);
         
@@ -37,14 +38,33 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
         }
         catch (Exception ex)
         {
-            return Result<AuthResult>.Failure($"Error login user: {ex.Message}");
+            return Result<AuthResult>.Failure(message: $"Error login user: {ex.Message}");
         }
     }
 
-    public async Task<Result> RegisterUser(User user, string confirmationLink)
+    public async Task<Result<string>> RegisterUser(string baseUrl, RegisterDto registerDto)
     {
         try
         {
+            var user = new User { Email = registerDto.Email, UserName = registerDto.Email };
+            
+            var createUserResult = await userManager.CreateAsync(user, registerDto.Password);
+            
+            if (!createUserResult.Succeeded)
+            {
+                var errors = string.Join("; ", createUserResult.Errors
+                    .Select(e => e.Description));
+
+                return Result<string>.Failure(errors);
+            }
+            
+            await userManager.AddToRoleAsync(user, "Member");
+
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var encodedToken = HttpUtility.UrlEncode(token);
+            
+            var confirmationLink = string.Format(AppConstants.EMAIL_CONFIRMATION_URL, baseUrl, user.Id, encodedToken);
+
             await capPublisher.PublishAsync(nameof(UserCreatedEvent), new UserCreatedEvent
             {
                 Email = user.Email,
@@ -52,11 +72,11 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
                 ReturnUrl = confirmationLink
             });
             
-            return Result.Success("Registration successful. Please check your email to confirm your account.");
+            return Result<string>.Success(message: "Registration successful. Please check your email to confirm your account.");
         }
         catch (Exception ex)
         {
-            return Result.Failure($"Error registering user: {ex.Message}");
+            return Result<string>.Failure(message: $"Error registering user: {ex.Message}");
         }
     }
 
@@ -69,9 +89,7 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
             if (user == null)
                 return Result.Failure("User not found");
 
-            var decodedToken = HttpUtility.UrlDecode(token);
-
-            var result = await userManager.ConfirmEmailAsync(user, decodedToken);
+            var result = await userManager.ConfirmEmailAsync(user, token);
 
             return result.Succeeded ? Result.Success("Email confirmed successfully") 
                 : Result.Failure("Invalid token or email confirmation failed");

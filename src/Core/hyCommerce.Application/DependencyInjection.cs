@@ -97,7 +97,8 @@ public static class DependencyInjection
             })
             .AddUserManager<ApplicationUserManager>()
             .AddRoles<Role>()
-            .AddEntityFrameworkStores<TContext>();
+            .AddEntityFrameworkStores<TContext>()
+            .AddDefaultTokenProviders();
         
         services.Configure<IdentityOptions>(options =>
         {
