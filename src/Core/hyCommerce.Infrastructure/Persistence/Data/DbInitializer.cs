@@ -23,7 +23,7 @@ public class DbInitializer
 
             var admin = new User
             {
-                UserName = adminUser,
+                UserName = "admin",
                 Email = "admin@test.com",
                 EmailConfirmed = true,
             };

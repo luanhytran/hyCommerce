@@ -38,4 +38,4 @@ Follow these steps to set up the local project.
    `docker compose up -d`
 
 2. Start RabbitMQ:  
-   `docker run -d \ --name hycommerce_rabbitmq \ -p 5672:5672 \ -p 15672:15672 \ -v hycommerce_rabbitmq_data:/var/lib/rabbitmq \ rabbitmq:management`
+   `docker run -d --name hycommerce_rabbitmq -p 5672:5672 -p 15672:15672 -v hycommerce_rabbitmq_data:/var/lib/rabbitmq rabbitmq:management`

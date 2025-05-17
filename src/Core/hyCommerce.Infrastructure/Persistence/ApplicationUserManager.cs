@@ -50,4 +50,11 @@ public class ApplicationUserManager : UserManager<User>
         user.ModifiedAt = DateTime.UtcNow;
         return base.ConfirmEmailAsync(user, token);
     }
+
+    public override Task<IdentityResult> UpdateAsync(User user)
+    {
+        user.ModifiedBy = _userId;
+        user.ModifiedAt = DateTime.UtcNow;
+        return base.UpdateAsync(user);
+    }
 }
