@@ -11,26 +11,26 @@ namespace hyCommerce.API.Controllers
         : BaseApiController
     {
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResult>> Login(LoginDto loginDto)
+        public async Task<ActionResult<AuthResult>> Login([FromBody] LoginDto loginDto)
         {
             var result = await identityService.Login(loginDto);
 
             if (result.IsSuccess)
                 return Ok(result.Data);
-            
+
             return Unauthorized(result.Message);
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser(RegisterDto registerDto)
+        public async Task<ActionResult> RegisterUser([FromBody] RegisterDto registerDto)
         {
             var baseUrl = Request.Scheme + "://" + Request.Host;
 
             var result = await identityService.RegisterUser(baseUrl, registerDto);
-            
+
             if (result.IsSuccess)
                 return Ok(result.Message);
-            
+
             return BadRequest(result.Message);
         }
 
@@ -73,17 +73,41 @@ namespace hyCommerce.API.Controllers
 
         [Authorize]
         [HttpPut("update-user/{userId}")]
-        public async Task<ActionResult> UpdateUser(string userId, UpdateUserDto updateUserDto)
+        public async Task<ActionResult> UpdateUser(string userId, [FromBody] UpdateUserDto updateUserDto)
         {
             var currentUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            
+
             var isAdmin = User.IsInRole("Admin");
-            
+
             var result = await identityService.UpdateUser(currentUserId, userId, updateUserDto, isAdmin);
-            
+
             if (result.IsSuccess)
                 return Ok(result.Message);
-            
+
+            return BadRequest(result.Message);
+        }
+
+        [HttpPost("request-reset-password")]
+        public async Task<ActionResult> RequestResetPassword([FromBody] RequestResetPasswordDto requestResetPasswordDto)
+        {
+            var baseUrl = Request.Scheme + "://" + Request.Host;
+
+            var result = await identityService.RequestResetPassword(requestResetPasswordDto.Email, baseUrl);
+
+            if (result.IsSuccess)
+                return Ok(result.Message);
+
+            return BadRequest(result.Message);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            var result = await identityService.ResetPassword(resetPasswordDto);
+
+            if (result.IsSuccess)
+                return Ok(result.Message);
+
             return BadRequest(result.Message);
         }
     }

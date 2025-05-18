@@ -57,4 +57,11 @@ public class ApplicationUserManager : UserManager<User>
         user.ModifiedAt = DateTime.UtcNow;
         return base.UpdateAsync(user);
     }
+
+    public override Task<IdentityResult> ResetPasswordAsync(User user, string token, string newPassword)
+    {
+        user.ModifiedBy = _userId;
+        user.ModifiedAt = DateTime.UtcNow;
+        return base.ResetPasswordAsync(user, token, newPassword);   
+    }   
 }

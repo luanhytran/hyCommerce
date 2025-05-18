@@ -18,6 +18,10 @@ public interface IIdentityService
     Task<Result> ConfirmEmail(string userId, string token);
     
     Task<Result> UpdateUser(string currentUserId, string targetUserId, UpdateUserDto updateUserDto, bool isAdmin);
+
+    Task<Result> RequestResetPassword(string email, string baseUrl);
+    
+    Task<Result> ResetPassword(ResetPasswordDto resetPasswordDto);
 }
 
 public class IdentityService(ApplicationUserManager userManager, ITokenService tokenService, ICapPublisher capPublisher) : IIdentityService
@@ -126,5 +130,42 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
         {
             return Result.Failure($"Error updating user: {ex.Message}");
         }
+    }
+
+    public async Task<Result> RequestResetPassword(string email, string baseUrl)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        
+        if (user == null)
+            return Result.Failure("User not found");
+        
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        var encodedToken = HttpUtility.UrlEncode(token);
+        
+        var resetLink = string.Format(AppConstants.EMAIL_CONFIRMATION_URL, baseUrl, user.Id, encodedToken);
+
+        await capPublisher.PublishAsync(nameof(ResetPasswordEvent), new ResetPasswordEvent()
+        {
+            Email = user.Email,
+            UserDisplayName = user.UserName,
+            ReturnUrl = resetLink
+        });
+        
+        return Result.Success("Reset password link sent to your email");
+    }
+
+    public async Task<Result> ResetPassword(ResetPasswordDto resetPasswordDto)
+    {
+        var user = await userManager.FindByIdAsync(resetPasswordDto.UserId);
+        
+        if (user == null)
+            return Result.Failure("User not found");
+        
+        var decodedToken = HttpUtility.UrlDecode(resetPasswordDto.Token);
+        
+        var result = await userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDto.NewPassword);
+        
+        return result.Succeeded ? Result.Success("Password reset successfully")
+            : Result.Failure($"Password reset failed: {string.Join("; ", result.Errors.Select(e => e.Description))}");      
     }
 }
