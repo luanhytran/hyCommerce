@@ -99,9 +99,7 @@ public class TokenService(IConfiguration config, UserManager<User> userManager, 
 
         await context.SaveChangesAsync();
 
-        var result = await CreateTokenAsync(user);
-
-        return result;
+        return await CreateTokenAsync(user);
     }
 
     public async Task<bool> RevokeRefreshTokenAsync(string token)

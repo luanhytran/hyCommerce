@@ -28,108 +28,80 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
 {
     public async Task<Result<AuthResult>> Login(LoginDto loginDto)
     {
-        try
-        {
-            var user = await userManager.FindByNameAsync(loginDto.UserName);
+        var user = await userManager.FindByNameAsync(loginDto.UserName);
 
-            if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password))
-                return Result<AuthResult>.Failure(message: "Invalid credentials");
+        if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password))
+            return Result<AuthResult>.Failure(message: "Invalid credentials");
 
-            if (!user.EmailConfirmed)
-                return Result<AuthResult>.Failure(message: "Email not confirmed");
+        if (!user.EmailConfirmed)
+            return Result<AuthResult>.Failure(message: "Email not confirmed");
 
-            var authResult = await tokenService.CreateTokenAsync(user);
-        
-            return Result<AuthResult>.Success(authResult);
-        }
-        catch (Exception ex)
-        {
-            return Result<AuthResult>.Failure(message: $"Error login user: {ex.Message}");
-        }
+        var authResult = await tokenService.CreateTokenAsync(user);
+
+        return Result<AuthResult>.Success(authResult);
     }
 
     public async Task<Result<string>> RegisterUser(string baseUrl, RegisterDto registerDto)
     {
-        try
+        var user = new User { Email = registerDto.Email, UserName = registerDto.Email };
+        
+        var createUserResult = await userManager.CreateAsync(user, registerDto.Password);
+        
+        if (!createUserResult.Succeeded)
         {
-            var user = new User { Email = registerDto.Email, UserName = registerDto.Email };
-            
-            var createUserResult = await userManager.CreateAsync(user, registerDto.Password);
-            
-            if (!createUserResult.Succeeded)
-            {
-                var errors = string.Join("; ", createUserResult.Errors
-                    .Select(e => e.Description));
+            var errors = string.Join("; ", createUserResult.Errors
+                .Select(e => e.Description));
 
-                return Result<string>.Failure(errors);
-            }
-            
-            await userManager.AddToRoleAsync(user, "Member");
-
-            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            var encodedToken = HttpUtility.UrlEncode(token);
-            
-            var confirmationLink = string.Format(AppConstants.EMAIL_CONFIRMATION_URL, baseUrl, user.Id, encodedToken);
-
-            await capPublisher.PublishAsync(nameof(UserCreatedEvent), new UserCreatedEvent
-            {
-                Email = user.Email,
-                UserDisplayName = user.UserName,
-                ReturnUrl = confirmationLink
-            });
-            
-            return Result<string>.Success(message: "Registration successful. Please check your email to confirm your account.");
+            return Result<string>.Failure(errors);
         }
-        catch (Exception ex)
+        
+        await userManager.AddToRoleAsync(user, "Member");
+
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var encodedToken = HttpUtility.UrlEncode(token);
+        
+        var confirmationLink = string.Format(AppConstants.EMAIL_CONFIRMATION_URL, baseUrl, user.Id, encodedToken);
+
+        await capPublisher.PublishAsync(nameof(UserCreatedEvent), new UserCreatedEvent
         {
-            return Result<string>.Failure(message: $"Error registering user: {ex.Message}");
-        }
+            Email = user.Email,
+            UserDisplayName = user.UserName,
+            ReturnUrl = confirmationLink
+        });
+        
+        return Result<string>.Success(message: "Registration successful. Please check your email to confirm your account.");
     }
 
     public async Task<Result> ConfirmEmail(string userId, string token)
     {
-        try
-        {
-            var user = await userManager.FindByIdAsync(userId);
+        var user = await userManager.FindByIdAsync(userId);
 
-            if (user == null)
-                return Result.Failure("User not found");
+        if (user == null)
+            return Result.Failure("User not found");
 
-            var result = await userManager.ConfirmEmailAsync(user, token);
+        var result = await userManager.ConfirmEmailAsync(user, token);
 
-            return result.Succeeded ? Result.Success("Email confirmed successfully") 
-                : Result.Failure("Invalid token or email confirmation failed");
-        }
-        catch (Exception ex)
-        {
-            return Result.Failure($"Error confirming email: {ex.Message}");
-        }
+        return result.Succeeded ? Result.Success("Email confirmed successfully") 
+            : Result.Failure("Invalid token or email confirmation failed");
     }
 
     public async Task<Result> UpdateUser(string currentUserId, string targetUserId, UpdateUserDto updateUserDto, bool isAdmin)
     {
-        try
-        {
-            if (!isAdmin && currentUserId != targetUserId)
-                return Result.Failure("You are not authorized to update this user");
-            
-            var user = await userManager.FindByIdAsync(targetUserId);
+        if (!isAdmin && currentUserId != targetUserId)
+            return Result.Failure("You are not authorized to update this user");
+        
+        var user = await userManager.FindByIdAsync(targetUserId);
 
-            if (user == null)
-                return Result.Failure("User not found");
+        if (user == null)
+            return Result.Failure("User not found");
 
-            user.UserName = updateUserDto.UserName;
+        user.UserName = updateUserDto.UserName;
 
-            var result = await userManager.UpdateAsync(user);
+        var result = await userManager.UpdateAsync(user);
 
-            return result.Succeeded
-                ? Result.Success("User updated successfully")
-                : Result.Failure($"User update failed: {string.Join("; ", result.Errors.Select(e => e.Description))}");
-        }
-        catch (Exception ex)
-        {
-            return Result.Failure($"Error updating user: {ex.Message}");
-        }
+        return result.Succeeded
+            ? Result.Success("User updated successfully")
+            : Result.Failure($"User update failed: {string.Join("; ", result.Errors.Select(e => e.Description))}");
     }
 
     public async Task<Result> RequestResetPassword(string email, string baseUrl)

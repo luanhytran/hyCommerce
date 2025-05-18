@@ -4,6 +4,7 @@ using hyCommerce.Infrastructure.Persistence.Data;
 using hyCommerce.Notification;
 using Microsoft.EntityFrameworkCore;
 using hyCommerce.EventBus;
+using hyCommerce.Extensions.Handlers.ErrorHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddMailSender(builder.Configuration);
 builder.Services.AddCap<AppDbContext>(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseGlobalExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -19,51 +19,30 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
 {
     public async Task<Result<List<Product>>> GetProducts(ProductParams productParams)
     {
-        try
-        {
-            var products = await productRepository.GetProducts(productParams);
+        var products = await productRepository.GetProducts(productParams);
 
-            return Result<List<Product>>.Success(products);
-        }
-        catch (Exception ex)
-        {
-            return Result<List<Product>>.Failure(message: $"Error retrieving products: {ex.Message}");
-        }
+        return Result<List<Product>>.Success(products);
     }
 
     public async Task<Result<Product>> GetProduct(int id)
     {
-        try
-        {
-            var product = await productRepository.GetProduct(id);
+        var product = await productRepository.GetProduct(id);
 
-            return product != null
-                ? Result<Product>.Success(product)
-                : Result<Product>.Failure(message: "No product found");
-        }
-        catch (Exception ex)
-        {
-            return Result<Product>.Failure(message: $"Error retrieving product: {ex.Message}");
-        }
+        return product != null
+            ? Result<Product>.Success(product)
+            : Result<Product>.Failure(message: "No product found");
     }
 
     public async Task<Result<Product>> CreateProduct(Product product)
     {
-        try
-        {
-            var createdProduct = await productRepository.CreateProduct(product);
+        var createdProduct = await productRepository.CreateProduct(product);
 
-            if (createdProduct == null)
-                return Result<Product>.Failure(message: "Failed to create product");
+        if (createdProduct == null)
+            return Result<Product>.Failure(message: "Failed to create product");
 
-            await unitOfWork.SaveAsync();
+        await unitOfWork.SaveAsync();
 
-            return Result<Product>.Success(createdProduct);
-        }
-        catch (Exception ex)
-        {
-            return Result<Product>.Failure(message: $"Error creating product: {ex.Message}");
-        }
+        return Result<Product>.Success(createdProduct);
     }
 
     public async Task<Result<bool>> DeleteProduct(int id)
