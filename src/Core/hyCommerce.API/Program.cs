@@ -18,9 +18,12 @@ builder.Services.AddMailSender(builder.Configuration);
 
 builder.Services.AddCap<AppDbContext>(builder.Configuration);
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
-app.UseGlobalExceptionHandler();
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
