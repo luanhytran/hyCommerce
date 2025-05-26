@@ -13,9 +13,9 @@ public class ProductController(IProductService productService) : BaseApiControll
         var result = await productService.GetProducts(productParams);
 
         if (result.IsSuccess)
-            return Ok(result.Data);
+            return Ok(result.Value);
 
-        return BadRequest(result.Message);
+        return BadRequest(result.Error.Description);
     }
 
     [HttpGet("{id}", Name = "GetProduct")]
@@ -24,9 +24,9 @@ public class ProductController(IProductService productService) : BaseApiControll
         var result = await productService.GetProduct(id);
 
         if (result.IsSuccess)
-            return Ok(result.Data);
+            return Ok(result.Value);
 
-        return NotFound(result.Message);
+        return NotFound(result.Error.Description);
     }
 
     [HttpPost]
@@ -35,9 +35,9 @@ public class ProductController(IProductService productService) : BaseApiControll
         var result = await productService.CreateProduct(product);
 
         if (result.IsSuccess)
-            return CreatedAtRoute("GetProduct", new { id = result.Data?.Id }, result.Data);
+            return CreatedAtRoute("GetProduct", new { id = result.Value?.Id }, result.Value);
 
-        return BadRequest(result.Message);
+        return BadRequest(result.Error.Description);
     }
 
     [HttpDelete("{id}")]
@@ -48,8 +48,10 @@ public class ProductController(IProductService productService) : BaseApiControll
         if (result.IsSuccess)
             return NoContent();
 
-        return result.Message?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true
-            ? NotFound(result.Message)
-            : BadRequest(result.Message);
+        var errorMessage = result.Error.Description;
+
+        return errorMessage?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true
+            ? NotFound(errorMessage)
+            : BadRequest(errorMessage);
     }
 }

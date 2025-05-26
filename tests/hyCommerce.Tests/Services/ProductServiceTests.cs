@@ -36,10 +36,10 @@ namespace hyCommerce.Tests.Services
 
             var result = await _productService.GetProducts(productParams);
 
-            result.Data.Should().NotBeNull();
+            result.Value.Should().NotBeNull();
             result.IsSuccess.Should().BeTrue();
-            result.Message.Should().BeNull();
-            result.Data.Should().HaveCount(3);
+            result.Error.Description.Should().BeNull();
+            result.Value.Should().HaveCount(3);
 
             _productRepositoryMock.Verify(repo => repo.GetProducts(It.IsAny<ProductParams>()), Times.Once);
         }
@@ -60,9 +60,9 @@ namespace hyCommerce.Tests.Services
             //Assert
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeTrue();
-            result.Message.Should().BeNull();
-            result.Data.Should().NotBeNull();
-            result.Data.Id.Should().Be(1);
+            result.Error.Description.Should().BeNull();
+            result.Value.Should().NotBeNull();
+            result.Value.Id.Should().Be(1);
 
             _productRepositoryMock.Verify(repo => repo.GetProduct(It.IsAny<int>()), Times.Once);
         }

@@ -19,18 +19,12 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
 {
     public async Task<Result<List<Product>>> GetProducts(ProductParams productParams)
     {
-        var products = await productRepository.GetProducts(productParams);
-
-        return Result<List<Product>>.Success(products);
+        return await productRepository.GetProducts(productParams);
     }
 
     public async Task<Result<Product>> GetProduct(int id)
     {
-        var product = await productRepository.GetProduct(id);
-
-        return product != null
-            ? Result<Product>.Success(product)
-            : Result<Product>.Failure(message: "No product found");
+        return await productRepository.GetProduct(id);
     }
 
     public async Task<Result<Product>> CreateProduct(Product product)
@@ -38,11 +32,14 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
         var createdProduct = await productRepository.CreateProduct(product);
 
         if (createdProduct == null)
-            return Result<Product>.Failure(message: "Failed to create product");
+        {
+            return Result.Failure<Product>(
+                new Error("ProductErrors.CreationFailed", "Failed to create product"));
+        }
 
         await unitOfWork.SaveAsync();
 
-        return Result<Product>.Success(createdProduct);
+        return Result.Success(createdProduct);
     }
 
     public async Task<Result<bool>> DeleteProduct(int id)
@@ -50,12 +47,14 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
         var product = await productRepository.GetProduct(id);
 
         if (product == null)
-            return Result<bool>.Failure(message: "Product not found");
+            return Result.Failure<bool>(
+                new Error("ProductErrors.NotFound", "Product not found"));
 
         var result = await productRepository.DeleteProduct(id);
 
         return result
-            ? Result<bool>.Success(result)
-            : Result<bool>.Failure(message: "Failed to delete product");
+            ? Result.Success(result)
+            : Result.Failure<bool>(
+                new Error("ProductErrors.DeletionFailed", "Failed to delete product"));
     }
 }

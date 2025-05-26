@@ -16,9 +16,9 @@ namespace hyCommerce.API.Controllers
             var result = await identityService.Login(loginDto);
 
             if (result.IsSuccess)
-                return Ok(result.Data);
+                return Ok(result.Value);
 
-            return Unauthorized(result.Message);
+            return Unauthorized(result.Error.Description);
         }
 
         [HttpPost("register")]
@@ -29,9 +29,9 @@ namespace hyCommerce.API.Controllers
             var result = await identityService.RegisterUser(baseUrl, registerDto);
 
             if (result.IsSuccess)
-                return Ok(result.Message);
+                return Ok(result.Value);
 
-            return BadRequest(result.Message);
+            return BadRequest(result.Error.Description);
         }
 
         [HttpGet("confirm-email")]
@@ -40,9 +40,9 @@ namespace hyCommerce.API.Controllers
             var result = await identityService.ConfirmEmail(userId, token);
 
             if (result.IsSuccess)
-                return Ok(result.Message);
+                return Ok("Email confirmed successfully");
 
-            return BadRequest(result.Message);
+            return BadRequest(result.Error.Description);
         }
 
         [HttpPost("refresh-token")]
@@ -82,9 +82,9 @@ namespace hyCommerce.API.Controllers
             var result = await identityService.UpdateUser(currentUserId, userId, updateUserDto, isAdmin);
 
             if (result.IsSuccess)
-                return Ok(result.Message);
+                return Ok("User updated successfully");
 
-            return BadRequest(result.Message);
+            return BadRequest(result.Error.Description);
         }
 
         [HttpPost("request-reset-password")]
@@ -95,9 +95,9 @@ namespace hyCommerce.API.Controllers
             var result = await identityService.RequestResetPassword(requestResetPasswordDto.Email, baseUrl);
 
             if (result.IsSuccess)
-                return Ok(result.Message);
+                return Ok("Reset password link sent to your email");
 
-            return BadRequest(result.Message);
+            return BadRequest(result.Error.Description);
         }
 
         [HttpPost("reset-password")]
@@ -106,9 +106,9 @@ namespace hyCommerce.API.Controllers
             var result = await identityService.ResetPassword(resetPasswordDto);
 
             if (result.IsSuccess)
-                return Ok(result.Message);
+                return Ok("Password reset successfully");
 
-            return BadRequest(result.Message);
+            return BadRequest(result.Error.Description);
         }
     }
 }

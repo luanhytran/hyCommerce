@@ -31,14 +31,14 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
         var user = await userManager.FindByNameAsync(loginDto.UserName);
 
         if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password))
-            return Result<AuthResult>.Failure(message: "Invalid credentials");
+            return Result.Failure<AuthResult>(new Error("IdentityErrors.InvalidCredentials","Invalid credentials"));
 
         if (!user.EmailConfirmed)
-            return Result<AuthResult>.Failure(message: "Email not confirmed");
+            return Result.Failure<AuthResult>(new Error("IdentityErrors.ConfirmEmail","Email not confirmed"));
 
         var authResult = await tokenService.CreateTokenAsync(user);
 
-        return Result<AuthResult>.Success(authResult);
+        return Result.Success(authResult);
     }
 
     public async Task<Result<string>> RegisterUser(string baseUrl, RegisterDto registerDto)
@@ -52,7 +52,7 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
             var errors = string.Join("; ", createUserResult.Errors
                 .Select(e => e.Description));
 
-            return Result<string>.Failure(errors);
+            return Result<string>.ValidationFailure(new Error("IdentityErrors.Validation",errors));
         }
         
         await userManager.AddToRoleAsync(user, "Member");
@@ -69,7 +69,7 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
             ReturnUrl = confirmationLink
         });
         
-        return Result<string>.Success(message: "Registration successful. Please check your email to confirm your account.");
+        return Result.Success("Registration successful. Please check your email to confirm your account.");
     }
 
     public async Task<Result> ConfirmEmail(string userId, string token)
@@ -77,23 +77,23 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
         var user = await userManager.FindByIdAsync(userId);
 
         if (user == null)
-            return Result.Failure("User not found");
+            return new Error("IdentityErrors.UserNotFound","User not found");
 
         var result = await userManager.ConfirmEmailAsync(user, token);
 
         return result.Succeeded ? Result.Success("Email confirmed successfully") 
-            : Result.Failure("Invalid token or email confirmation failed");
+            : new Error("IdentityErrors.ConfirmEmail", "Invalid token or email confirmation failed");
     }
 
     public async Task<Result> UpdateUser(string currentUserId, string targetUserId, UpdateUserDto updateUserDto, bool isAdmin)
     {
         if (!isAdmin && currentUserId != targetUserId)
-            return Result.Failure("You are not authorized to update this user");
+            return new Error("IdentityErrors.Authorized", "You are not authorized to update this user");
         
         var user = await userManager.FindByIdAsync(targetUserId);
 
         if (user == null)
-            return Result.Failure("User not found");
+            return new Error("IdentityErrors.UserNotFound", "User not found");
 
         user.UserName = updateUserDto.UserName;
 
@@ -101,7 +101,8 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
 
         return result.Succeeded
             ? Result.Success("User updated successfully")
-            : Result.Failure($"User update failed: {string.Join("; ", result.Errors.Select(e => e.Description))}");
+            : new Error("IdentityErrors.UserUpdateFailed", 
+                $"User update failed: {string.Join("; ", result.Errors.Select(e => e.Description))}");
     }
 
     public async Task<Result> RequestResetPassword(string email, string baseUrl)
@@ -109,7 +110,7 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
         var user = await userManager.FindByEmailAsync(email);
         
         if (user == null)
-            return Result.Failure("User not found");
+            return new Error("IdentityErrors.UserNotFound","User not found");
         
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
         var encodedToken = HttpUtility.UrlEncode(token);
@@ -131,13 +132,14 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
         var user = await userManager.FindByIdAsync(resetPasswordDto.UserId);
         
         if (user == null)
-            return Result.Failure("User not found");
+            return new Error("IdentityErrors.UserNotFound","User not found");
         
         var decodedToken = HttpUtility.UrlDecode(resetPasswordDto.Token);
         
         var result = await userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDto.NewPassword);
         
         return result.Succeeded ? Result.Success("Password reset successfully")
-            : Result.Failure($"Password reset failed: {string.Join("; ", result.Errors.Select(e => e.Description))}");      
+            : new Error("IdentityErrors.PasswordResetFailed", 
+                $"Password reset failed: {string.Join("; ", result.Errors.Select(e => e.Description))}");      
     }
 }
