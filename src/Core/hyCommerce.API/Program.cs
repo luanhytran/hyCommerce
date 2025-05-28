@@ -2,7 +2,6 @@ using hyCommerce.Application;
 using hyCommerce.Infrastructure.Persistence;
 using hyCommerce.Infrastructure.Persistence.Data;
 using hyCommerce.Notification;
-using Microsoft.EntityFrameworkCore;
 using hyCommerce.EventBus;
 using hyCommerce.Extensions.Handlers.ErrorHandler;
 

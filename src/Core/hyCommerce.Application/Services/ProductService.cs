@@ -24,7 +24,7 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
 
     public async Task<Product?> GetProduct(int id)
     {
-        return await productRepository.GetProduct(id);
+        return await productRepository.GetProduct(id) ?? throw new NotFoundException($"Product {id} not found");
     }
 
     public async Task<Product> CreateProduct(Product product)
