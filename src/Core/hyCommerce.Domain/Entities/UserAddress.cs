@@ -1,4 +1,6 @@
-﻿namespace hyCommerce.Domain.Entities
+﻿using hyCommerce.Domain.Entities.Base;
+
+namespace hyCommerce.Domain.Entities
 {
     public class UserAddress : Address, IAuditEntity
     {

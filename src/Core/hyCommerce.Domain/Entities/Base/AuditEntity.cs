@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace hyCommerce.Domain.Entities;
+namespace hyCommerce.Domain.Entities.Base;
 
 public interface IAuditEntity
 {

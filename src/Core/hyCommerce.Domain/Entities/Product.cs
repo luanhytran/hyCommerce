@@ -1,6 +1,8 @@
-﻿namespace hyCommerce.Domain.Entities;
+﻿using hyCommerce.Domain.Entities.Base;
 
-public class Product : AuditEntity
+namespace hyCommerce.Domain.Entities;
+
+public class Product : SoftDeleteEntity
 {
     public required string Name { get; set; }
     public required string Description { get; set; }
@@ -11,5 +13,4 @@ public class Product : AuditEntity
     public Category Category { get; set; }
     public int BrandId { get; set; }
     public Brand Brand { get; set; }
-    public bool IsDeleted { get; set; }
 }

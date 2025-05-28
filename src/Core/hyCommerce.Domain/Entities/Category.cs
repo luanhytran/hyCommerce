@@ -1,6 +1,8 @@
-﻿namespace hyCommerce.Domain.Entities
+﻿using hyCommerce.Domain.Entities.Base;
+
+namespace hyCommerce.Domain.Entities
 {
-    public class Category : AuditEntity
+    public class Category : SoftDeleteEntity
     {
         public required string Name { get; set; }
     }
