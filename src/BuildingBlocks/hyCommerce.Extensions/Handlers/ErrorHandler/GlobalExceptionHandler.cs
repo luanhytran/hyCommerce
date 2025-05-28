@@ -20,11 +20,12 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
     {
         logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
 
-        ProblemDetails problemDetails = exception switch
+        var problemDetails = exception switch
         {
             ArgumentNullException ex => CreateProblemDetails(HttpStatusCode.BadRequest, INVALID_ARGUMENT, ex.Message, httpContext),
             ArgumentException ex => CreateProblemDetails(HttpStatusCode.BadRequest, INVALID_ARGUMENT, ex.Message, httpContext),
             ValidationException ex => CreateProblemDetails(HttpStatusCode.BadRequest, INVALID_ARGUMENT, ex.Message, httpContext),
+            UnauthorizedAccessException ex => CreateProblemDetails(HttpStatusCode.BadRequest, INVALID_ARGUMENT, ex.Message, httpContext),
             BadRequestException ex => CreateProblemDetails(HttpStatusCode.BadRequest, INVALID_ARGUMENT, ex.Message, httpContext),
             NotFoundException ex => CreateProblemDetails(HttpStatusCode.NotFound, NOT_FOUND, ex.Message, httpContext),
             _ => CreateProblemDetails(HttpStatusCode.InternalServerError, INTERNAL_ERROR, INTERNAL_ERROR_MESSAGE, httpContext)

@@ -3,7 +3,7 @@ using hyCommerce.Domain.Entities.Base;
 
 namespace hyCommerce.Domain.Entities.Order
 {
-    public class Order : SoftDeleteEntity
+    public class Order : AuditEntity, ISoftDelete
     {
         public int BuyerId { get; set; }
 
@@ -17,6 +17,9 @@ namespace hyCommerce.Domain.Entities.Order
         public int DiscountId { get; set; }
         public required Discount Discount { get; set; }
         public int PaymentId { get; set; }
+        public string? DeletedBy { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public bool IsDeleted { get; set; }
 
         public decimal GetTotal()
         {

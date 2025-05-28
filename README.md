@@ -4,7 +4,7 @@
 
 [x] Create Class Entity
 
-[] Create BaseEntity + Audit Field
+[x] Create BaseEntity + Audit Field
 
 [x] Migration
 
@@ -20,11 +20,7 @@
 
 [x] Seed Data
 
-[] Global Exception Middleware
-
-[] Validation Fluent
-
-[] Response Generic
+[x] Global Exception Middleware
 
 [x] Unit Test + Integration Test
 

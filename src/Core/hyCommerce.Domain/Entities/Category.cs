@@ -2,8 +2,11 @@
 
 namespace hyCommerce.Domain.Entities
 {
-    public class Category : SoftDeleteEntity
+    public class Category : AuditEntity, ISoftDelete
     {
         public required string Name { get; set; }
+        public string? DeletedBy { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

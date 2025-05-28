@@ -87,7 +87,7 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
     public async Task<string> UpdateUser(string currentUserId, string targetUserId, UpdateUserDto updateUserDto, bool isAdmin)
     {
         if (!isAdmin && currentUserId != targetUserId)
-            throw new InvalidOperationException("You are not authorized to update this user");
+            throw new UnauthorizedAccessException("You are not authorized to update this user");
         
         var user = await userManager.FindByIdAsync(targetUserId);
 
