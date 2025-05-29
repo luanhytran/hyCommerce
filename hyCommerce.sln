@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.EventBus", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Common", "src\BuildingBlocks\hyCommerce.Common\hyCommerce.Common.csproj", "{DF132CEB-0EB2-46BA-926B-1E7F90710BE2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hyCommerce.Extensions", "src\BuildingBlocks\hyCommerce.Extensions\hyCommerce.Extensions.csproj", "{4F427016-C381-4788-BF74-D83D2A49BCBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{DF132CEB-0EB2-46BA-926B-1E7F90710BE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF132CEB-0EB2-46BA-926B-1E7F90710BE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF132CEB-0EB2-46BA-926B-1E7F90710BE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F427016-C381-4788-BF74-D83D2A49BCBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F427016-C381-4788-BF74-D83D2A49BCBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F427016-C381-4788-BF74-D83D2A49BCBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F427016-C381-4788-BF74-D83D2A49BCBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +94,7 @@ Global
 		{AA6DE0C1-B350-4B89-8DA1-41980AD927F2} = {F58DA8AE-F5E4-412E-B604-04BDC9516712}
 		{FBE7C5B1-E6A5-42D8-AE39-EA83FA4AA85D} = {AA6DE0C1-B350-4B89-8DA1-41980AD927F2}
 		{DF132CEB-0EB2-46BA-926B-1E7F90710BE2} = {AA6DE0C1-B350-4B89-8DA1-41980AD927F2}
+		{4F427016-C381-4788-BF74-D83D2A49BCBE} = {AA6DE0C1-B350-4B89-8DA1-41980AD927F2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A648324-DBC2-45DE-9A8C-C317D1C06EEE}

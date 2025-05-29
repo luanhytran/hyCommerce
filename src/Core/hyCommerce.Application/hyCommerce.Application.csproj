@@ -8,10 +8,12 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\BuildingBlocks\hyCommerce.Common\hyCommerce.Common.csproj" />
+      <ProjectReference Include="..\..\BuildingBlocks\hyCommerce.Extensions\hyCommerce.Extensions.csproj" />
       <ProjectReference Include="..\hyCommerce.Domain\hyCommerce.Domain.csproj" />
       <ProjectReference Include="..\hyCommerce.Infrastructure\hyCommerce.Infrastructure.csproj" />
     </ItemGroup>

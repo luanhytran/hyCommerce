@@ -1,85 +1,144 @@
+using System.ComponentModel.DataAnnotations;
 using System.Web;
-using Azure.Core;
 using DotNetCore.CAP;
 using hyCommerce.Application.DTOs;
+using hyCommerce.Common.Constants;
 using hyCommerce.Common.Event;
-using hyCommerce.Domain.Common;
 using hyCommerce.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+using hyCommerce.Extensions.Exceptions;
+using hyCommerce.Infrastructure.Persistence;
 
 namespace hyCommerce.Application.Services;
 
 public interface IIdentityService
 {
-    Task<Result<AuthResult>> Login(LoginDto loginDto);
+    Task<AuthResult> Login(LoginDto loginDto);
 
-    Task<Result> RegisterUser(User user, string confirmationLink);
+    Task<string> RegisterUser(string baseUrl, RegisterDto registerDto);
 
-    Task<Result> ConfirmEmail(string userId, string token);
+    Task<string> ConfirmEmail(string userId, string token);
+    
+    Task<string> UpdateUser(string currentUserId, string targetUserId, UpdateUserDto updateUserDto, bool isAdmin);
+
+    Task<string> RequestResetPassword(string email, string baseUrl);
+    
+    Task<string> ResetPassword(ResetPasswordDto resetPasswordDto);
 }
 
-public class IdentityService(UserManager<User> userManager, ITokenService tokenService, ICapPublisher capPublisher) : IIdentityService
+public class IdentityService(ApplicationUserManager userManager, ITokenService tokenService, ICapPublisher capPublisher) : IIdentityService
 {
-    public async Task<Result<AuthResult>> Login(LoginDto loginDto)
+    public async Task<AuthResult> Login(LoginDto loginDto)
     {
-        try
-        {
-            var user = await userManager.FindByNameAsync(loginDto.UserName);
+        var user = await userManager.FindByNameAsync(loginDto.UserName);
 
-            if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password))
-                return Result<AuthResult>.Failure("Invalid credentials");
+        if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password))
+            throw new ValidationException("Invalid credentials");
 
-            if (!user.EmailConfirmed)
-                return Result<AuthResult>.Failure("Email not confirmed");
-
-            var authResult = await tokenService.CreateTokenAsync(user);
+        if (!user.EmailConfirmed)
+            throw new ValidationException("Email not confirmed");
         
-            return Result<AuthResult>.Success(authResult);
-        }
-        catch (Exception ex)
-        {
-            return Result<AuthResult>.Failure($"Error login user: {ex.Message}");
-        }
+        return await tokenService.CreateTokenAsync(user);
     }
 
-    public async Task<Result> RegisterUser(User user, string confirmationLink)
+    public async Task<string> RegisterUser(string baseUrl, RegisterDto registerDto)
     {
-        try
+        var user = new User { Email = registerDto.Email, UserName = registerDto.Email };
+        
+        var createUserResult = await userManager.CreateAsync(user, registerDto.Password);
+        
+        if (!createUserResult.Succeeded)
         {
-            await capPublisher.PublishAsync(nameof(UserCreatedEvent), new UserCreatedEvent
-            {
-                Email = user.Email,
-                UserDisplayName = user.UserName,
-                ReturnUrl = confirmationLink
-            });
-            
-            return Result.Success("Registration successful. Please check your email to confirm your account.");
+            var errors = string.Join("; ", createUserResult.Errors
+                .Select(e => e.Description));
+
+            throw new ValidationException(errors);
         }
-        catch (Exception ex)
+        
+        await userManager.AddToRoleAsync(user, "Member");
+
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var encodedToken = HttpUtility.UrlEncode(token);
+        
+        var confirmationLink = string.Format(AppConstants.EMAIL_CONFIRMATION_URL, baseUrl, user.Id, encodedToken);
+
+        await capPublisher.PublishAsync(nameof(UserCreatedEvent), new UserCreatedEvent
         {
-            return Result.Failure($"Error registering user: {ex.Message}");
-        }
+            Email = user.Email,
+            UserDisplayName = user.UserName,
+            ReturnUrl = confirmationLink
+        });
+        
+        return "Registration successful. Please check your email to confirm your account.";
     }
 
-    public async Task<Result> ConfirmEmail(string userId, string token)
+    public async Task<string> ConfirmEmail(string userId, string token)
     {
-        try
+        var user = await userManager.FindByIdAsync(userId);
+
+        if (user == null)
+            throw new NotFoundException("User not found");
+
+        var result = await userManager.ConfirmEmailAsync(user, token);
+
+        return result.Succeeded ? "Email confirmed successfully"
+            : throw new ValidationException("Invalid token or email confirmation failed");
+    }
+
+    public async Task<string> UpdateUser(string currentUserId, string targetUserId, UpdateUserDto updateUserDto, bool isAdmin)
+    {
+        if (!isAdmin && currentUserId != targetUserId)
+            throw new UnauthorizedAccessException("You are not authorized to update this user");
+        
+        var user = await userManager.FindByIdAsync(targetUserId);
+
+        if (user == null)
+            throw new NotFoundException("User not found");
+
+        user.UserName = updateUserDto.UserName;
+
+        var result = await userManager.UpdateAsync(user);
+
+        return result.Succeeded
+            ? "User updated successfully"
+            : throw new ValidationException( 
+                $"User update failed: {string.Join("; ", result.Errors.Select(e => e.Description))}");
+    }
+
+    public async Task<string> RequestResetPassword(string email, string baseUrl)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        
+        if (user == null)
+            throw new NotFoundException("User not found");
+        
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        var encodedToken = HttpUtility.UrlEncode(token);
+        
+        var resetLink = string.Format(AppConstants.RESET_PASSWORD_URL, baseUrl, user.Id, encodedToken);
+
+        await capPublisher.PublishAsync(nameof(ResetPasswordEvent), new ResetPasswordEvent()
         {
-            var user = await userManager.FindByIdAsync(userId);
+            Email = user.Email,
+            UserDisplayName = user.UserName,
+            ReturnUrl = resetLink
+        });
+        
+        return "Reset password link sent to your email";
+    }
 
-            if (user == null)
-                return Result.Failure("User not found");
-
-            var decodedToken = HttpUtility.UrlDecode(token);
-
-            var result = await userManager.ConfirmEmailAsync(user, decodedToken);
-
-            return result.Succeeded ? Result.Success("Email confirmed successfully") 
-                : Result.Failure("Invalid token or email confirmation failed");
-        }
-        catch (Exception ex)
-        {
-            return Result.Failure($"Error confirming email: {ex.Message}");
-        }
+    public async Task<string> ResetPassword(ResetPasswordDto resetPasswordDto)
+    {
+        var user = await userManager.FindByIdAsync(resetPasswordDto.UserId);
+        
+        if (user == null)
+            throw new NotFoundException("User not found");
+        
+        var decodedToken = HttpUtility.UrlDecode(resetPasswordDto.Token);
+        
+        var result = await userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDto.NewPassword);
+        
+        return result.Succeeded ? "Password reset successfully"
+            : throw new ValidationException( 
+                $"Password reset failed: {string.Join("; ", result.Errors.Select(e => e.Description))}");      
     }
 }

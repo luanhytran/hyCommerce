@@ -1,61 +1,31 @@
+using System.Security.Claims;
 using hyCommerce.Application.DTOs;
 using hyCommerce.Application.Services;
-using hyCommerce.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Web;
 
 namespace hyCommerce.API.Controllers
 {
-    public class AccountController(UserManager<User> userManager, ITokenService tokenService, IIdentityService identityService)
+    public class AccountController(ITokenService tokenService, IIdentityService identityService)
         : BaseApiController
     {
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResult>> Login(LoginDto loginDto)
+        public async Task<ActionResult<AuthResult>> Login([FromBody] LoginDto loginDto)
         {
-            var result = await identityService.Login(loginDto);
+            var token = await identityService.Login(loginDto);
 
-            if (result.IsSuccess)
-                return Ok(result.Data);
-            
-            return BadRequest(result.ErrorMessage);
+            return Ok(token);
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser(RegisterDto registerDto)
+        public async Task<ActionResult> RegisterUser([FromBody] RegisterDto registerDto)
         {
-            var user = new User { Email = registerDto.Email, UserName = registerDto.Email };
-            
-            var createUserResult = await userManager.CreateAsync(user, registerDto.Password);
+            var baseUrl = Request.Scheme + "://" + Request.Host;
 
-            if (!createUserResult.Succeeded)
-            {
-                foreach (var error in createUserResult.Errors)
-                    ModelState.AddModelError(error.Code, error.Description);
+            var result = await identityService.RegisterUser(baseUrl, registerDto);
 
-                return ValidationProblem();
-            }
-            
-            await userManager.AddToRoleAsync(user, "Member");
-
-            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-
-            var encodedToken = HttpUtility.UrlEncode(token);
-
-            var confirmationLink = Url.Action("ConfirmEmail", "Account", new
-            {
-                userId = user.Id,
-                token = encodedToken,
-            }, Request.Scheme);
-
-            var result = await identityService.RegisterUser(user, confirmationLink);
-            
-            if (result.IsSuccess)
-                return Ok(result.Message);
-            
-            return BadRequest(result.Message);
+            return Ok(result);
         }
 
         [HttpGet("confirm-email")]
@@ -63,10 +33,7 @@ namespace hyCommerce.API.Controllers
         {
             var result = await identityService.ConfirmEmail(userId, token);
 
-            if (result.IsSuccess)
-                return Ok(result.Message);
-
-            return BadRequest(result.Message);
+            return Ok(result);
         }
 
         [HttpPost("refresh-token")]
@@ -93,6 +60,40 @@ namespace hyCommerce.API.Controllers
                 return NotFound("Token not found");
 
             return Ok("Token revoked");
+        }
+
+        [Authorize]
+        [HttpPut("update-user/{userId}")]
+        public async Task<ActionResult> UpdateUser(string userId, [FromBody] UpdateUserDto updateUserDto)
+        {
+            var currentUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var isAdmin = User.IsInRole("Admin");
+
+            if (currentUserId == null) 
+                return BadRequest("Current user ID not found or user is not authenticated");
+            
+            var result = await identityService.UpdateUser(currentUserId, userId, updateUserDto, isAdmin);
+
+            return Ok(result);
+        }
+
+        [HttpPost("request-reset-password")]
+        public async Task<ActionResult> RequestResetPassword([FromBody] RequestResetPasswordDto requestResetPasswordDto)
+        {
+            var baseUrl = Request.Scheme + "://" + Request.Host;
+
+            var result = await identityService.RequestResetPassword(requestResetPasswordDto.Email, baseUrl);
+
+            return Ok(result);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            var result = await identityService.ResetPassword(resetPasswordDto);
+
+            return Ok(result);
         }
     }
 }

@@ -12,10 +12,7 @@ public class ProductController(IProductService productService) : BaseApiControll
     {
         var result = await productService.GetProducts(productParams);
 
-        if (result.IsSuccess)
-            return Ok(result.Data);
-
-        return BadRequest(result.ErrorMessage);
+        return Ok(result);
     }
 
     [HttpGet("{id}", Name = "GetProduct")]
@@ -23,33 +20,22 @@ public class ProductController(IProductService productService) : BaseApiControll
     {
         var result = await productService.GetProduct(id);
 
-        if (result.IsSuccess)
-            return Ok(result.Data);
-
-        return NotFound(result.ErrorMessage);
+        return Ok(result);
     }
 
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
         var result = await productService.CreateProduct(product);
-
-        if (result.IsSuccess)
-            return CreatedAtRoute("GetProduct", new { id = result.Data?.Id }, result.Data);
-
-        return BadRequest(result.ErrorMessage);
+        
+        return CreatedAtRoute("GetProduct", new { id = result?.Id }, result);
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
-        var result = await productService.DeleteProduct(id);
+        await productService.DeleteProduct(id);
 
-        if (result.IsSuccess)
-            return NoContent();
-
-        return result.ErrorMessage?.Contains("not found", StringComparison.OrdinalIgnoreCase) == true
-            ? NotFound(result.ErrorMessage)
-            : BadRequest(result.ErrorMessage);
+        return NoContent();
     }
 }

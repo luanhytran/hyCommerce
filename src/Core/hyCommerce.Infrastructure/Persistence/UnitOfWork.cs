@@ -1,15 +1,8 @@
-﻿using hyCommerce.Infrastructure.Persistence.Data;
+﻿using hyCommerce.Domain;
+using hyCommerce.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace hyCommerce.Infrastructure.Persistence;
-
-public interface IUnitOfWork : IAsyncDisposable
-{
-    public Task BeginTransactionAsync();
-    public Task CommitTransactionAsync();
-    public Task<int> SaveAsync();
-    public Task RollbackAsync();
-}
 
 public class UnitOfWork(AppDbContext context) : IUnitOfWork
 {

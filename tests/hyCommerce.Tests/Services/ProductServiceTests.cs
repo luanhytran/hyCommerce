@@ -1,10 +1,10 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using hyCommerce.Application.Services;
+using hyCommerce.Domain;
 using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Entities.Helpers;
-using hyCommerce.Infrastructure.Persistence;
-using hyCommerce.Infrastructure.Persistence.Repositories;
+using hyCommerce.Domain.Repositories;
 using Moq;
 
 namespace hyCommerce.Tests.Services
@@ -35,10 +35,8 @@ namespace hyCommerce.Tests.Services
 
             var result = await _productService.GetProducts(productParams);
 
-            result.Data.Should().NotBeNull();
-            result.IsSuccess.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
-            result.Data.Should().HaveCount(3);
+            result.Should().NotBeNull();
+            result.Should().HaveCount(3);
 
             _productRepositoryMock.Verify(repo => repo.GetProducts(It.IsAny<ProductParams>()), Times.Once);
         }
@@ -58,10 +56,8 @@ namespace hyCommerce.Tests.Services
 
             //Assert
             result.Should().NotBeNull();
-            result.IsSuccess.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
-            result.Data.Should().NotBeNull();
-            result.Data.Id.Should().Be(1);
+            result.Should().NotBeNull();
+            result.Id.Should().Be(1);
 
             _productRepositoryMock.Verify(repo => repo.GetProduct(It.IsAny<int>()), Times.Once);
         }
