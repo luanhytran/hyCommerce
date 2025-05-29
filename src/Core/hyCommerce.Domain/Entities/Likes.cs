@@ -1,11 +1,15 @@
-﻿namespace hyCommerce.Domain.Entities
+﻿using hyCommerce.Domain.Entities.Base;
+
+namespace hyCommerce.Domain.Entities
 {
-    public class Likes
+    public class Likes : AuditEntity, ISoftDelete
     {
-        public int Id { get; set; }
         public int UserId { get; set; }
         public required User User { get; set; }
         public int ProductId { get; set; }
         public required Product Product { get; set; }
+        public string? DeletedBy { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

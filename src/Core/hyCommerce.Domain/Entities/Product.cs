@@ -1,8 +1,9 @@
-﻿namespace hyCommerce.Domain.Entities;
+﻿using hyCommerce.Domain.Entities.Base;
 
-public class Product
+namespace hyCommerce.Domain.Entities;
+
+public class Product : AuditEntity, ISoftDelete
 {
-    public int Id { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
     public long Price { get; set; }
@@ -12,5 +13,7 @@ public class Product
     public Category Category { get; set; }
     public int BrandId { get; set; }
     public Brand Brand { get; set; }
+    public string? DeletedBy { get; set; }
+    public DateTime? DeletedAt { get; set; }
     public bool IsDeleted { get; set; }
 }

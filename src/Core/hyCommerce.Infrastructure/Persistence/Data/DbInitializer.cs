@@ -1,19 +1,21 @@
 using hyCommerce.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace hyCommerce.Infrastructure.Persistence.Data;
 
 public class DbInitializer
 {
-    public static async Task Initialize(AppDbContext context, UserManager<User> userManager)
+    public static async Task Initialize(AppDbContext context, ApplicationUserManager userManager)
     {
+        var now = DateTime.UtcNow;
+        const string adminUser = "System";
+        
         if (!userManager.Users.Any())
         {
             var user = new User
             {
                 UserName = "bob",
                 Email = "bob@test.com",
-                EmailConfirmed = true
+                EmailConfirmed = true,
             };
 
             await userManager.CreateAsync(user, "Pa$$w0rd");
@@ -23,7 +25,7 @@ public class DbInitializer
             {
                 UserName = "admin",
                 Email = "admin@test.com",
-                EmailConfirmed = true
+                EmailConfirmed = true,
             };
 
             await userManager.CreateAsync(admin, "Pa$$w0rd");
@@ -34,25 +36,25 @@ public class DbInitializer
 
         var brands = new List<Brand>
         {
-            new Brand { Name = "Angular" },
-            new Brand { Name = "NetCore" },
-            new Brand { Name = "React" },
-            new Brand { Name = "TypeScript" },
-            new Brand { Name = "VS Code" },
-            new Brand { Name = "Redis" }
+            new Brand { Name = "Angular", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Brand { Name = "NetCore", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Brand { Name = "React", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Brand { Name = "TypeScript", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Brand { Name = "VS Code", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Brand { Name = "Redis", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now }
         };
 
         var categories = new List<Category>
         {
-            new Category { Name = "Boards" },
-            new Category { Name = "Hats" },
-            new Category { Name = "Gloves" },
-            new Category { Name = "Boots" }
+            new Category { Name = "Boards", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Category { Name = "Hats", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Category { Name = "Gloves", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now },
+            new Category { Name = "Boots", CreatedBy = adminUser, CreatedAt = now, ModifiedBy = adminUser, ModifiedAt = now }
         };
 
         context.Brands.AddRange(brands);
         context.Categories.AddRange(categories);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var products = new List<Product>
         {
@@ -65,7 +67,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "Angular"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -76,7 +82,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "Angular"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -87,7 +97,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "NetCore"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -98,7 +112,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "NetCore"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -109,7 +127,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "React"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -120,7 +142,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "TypeScript"),
                 Category = categories.First(c => c.Name == "Boards"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -131,7 +157,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "NetCore"),
                 Category = categories.First(c => c.Name == "Hats"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -142,7 +172,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "React"),
                 Category = categories.First(c => c.Name == "Hats"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -153,7 +187,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "React"),
                 Category = categories.First(c => c.Name == "Hats"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -164,7 +202,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "VS Code"),
                 Category = categories.First(c => c.Name == "Gloves"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -175,7 +217,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "VS Code"),
                 Category = categories.First(c => c.Name == "Gloves"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -186,7 +232,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "React"),
                 Category = categories.First(c => c.Name == "Gloves"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -197,7 +247,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "React"),
                 Category = categories.First(c => c.Name == "Gloves"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -208,7 +262,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "Redis"),
                 Category = categories.First(c => c.Name == "Boots"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -219,7 +277,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "NetCore"),
                 Category = categories.First(c => c.Name == "Boots"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -230,7 +292,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "NetCore"),
                 Category = categories.First(c => c.Name == "Boots"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -241,7 +307,11 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "Angular"),
                 Category = categories.First(c => c.Name == "Boots"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
             new Product
             {
@@ -252,11 +322,15 @@ public class DbInitializer
                 Brand = brands.First(b => b.Name == "Angular"),
                 Category = categories.First(c => c.Name == "Boots"),
                 QuantityInStock = 100,
-                IsDeleted = false
+                IsDeleted = false,
+                CreatedBy = adminUser,
+                CreatedAt = now,
+                ModifiedBy = adminUser,
+                ModifiedAt = now
             },
         };
 
         context.Products.AddRange(products);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

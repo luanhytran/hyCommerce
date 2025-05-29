@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using hyCommerce.Domain.Entities.Base;
 
 namespace hyCommerce.Domain.Entities.Order
 {
-    public class Order
+    public class Order : AuditEntity, ISoftDelete
     {
-        public int Id { get; set; }
         public int BuyerId { get; set; }
 
         [Required]
@@ -17,6 +17,8 @@ namespace hyCommerce.Domain.Entities.Order
         public int DiscountId { get; set; }
         public required Discount Discount { get; set; }
         public int PaymentId { get; set; }
+        public string? DeletedBy { get; set; }
+        public DateTime? DeletedAt { get; set; }
         public bool IsDeleted { get; set; }
 
         public decimal GetTotal()

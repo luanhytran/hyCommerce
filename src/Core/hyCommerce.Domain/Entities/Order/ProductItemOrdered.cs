@@ -1,8 +1,9 @@
-﻿namespace hyCommerce.Domain.Entities.Order
+﻿using hyCommerce.Domain.Entities.Base;
+
+namespace hyCommerce.Domain.Entities.Order
 {
-    public class ProductItemOrdered
+    public class ProductItemOrdered : AuditEntity
     {
-        public int ProductId { get; set; }
         public required string Name { get; set; }
         public required string PictureUrl { get; set; }
     }
