@@ -114,7 +114,7 @@ public class IdentityService(ApplicationUserManager userManager, ITokenService t
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
         var encodedToken = HttpUtility.UrlEncode(token);
         
-        var resetLink = string.Format(AppConstants.EMAIL_CONFIRMATION_URL, baseUrl, user.Id, encodedToken);
+        var resetLink = string.Format(AppConstants.RESET_PASSWORD_URL, baseUrl, user.Id, encodedToken);
 
         await capPublisher.PublishAsync(nameof(ResetPasswordEvent), new ResetPasswordEvent()
         {
