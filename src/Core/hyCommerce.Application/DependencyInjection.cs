@@ -2,7 +2,7 @@ using System.Text;
 using hyCommerce.Application.Services;
 using hyCommerce.Domain;
 using hyCommerce.Domain.Entities;
-using hyCommerce.Domain.Repositories;
+using hyCommerce.Domain.Interfaces;
 using hyCommerce.Infrastructure.Persistence;
 using hyCommerce.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -79,8 +79,11 @@ public static class DependencyInjection
     {
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IProductService, ProductService>();
-        services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IBrandRepository, BrandRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;

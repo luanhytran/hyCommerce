@@ -15,7 +15,7 @@ public class ProductController(IProductService productService) : BaseApiControll
         return Ok(result);
     }
 
-    [HttpGet("{id}", Name = "GetProduct")]
+    [HttpGet("{id:int}", Name = "GetProduct")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
         var result = await productService.GetProduct(id);

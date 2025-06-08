@@ -4,7 +4,7 @@ using hyCommerce.Application.Services;
 using hyCommerce.Domain;
 using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Entities.Helpers;
-using hyCommerce.Domain.Repositories;
+using hyCommerce.Domain.Interfaces;
 using Moq;
 
 namespace hyCommerce.Tests.Services
