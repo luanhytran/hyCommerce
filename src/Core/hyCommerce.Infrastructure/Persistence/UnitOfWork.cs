@@ -1,4 +1,5 @@
 ﻿using hyCommerce.Domain;
+using hyCommerce.Domain.Interfaces;
 using hyCommerce.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore.Storage;
 

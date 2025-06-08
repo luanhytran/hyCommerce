@@ -1,4 +1,4 @@
-namespace hyCommerce.Domain;
+namespace hyCommerce.Domain.Interfaces;
 
 public interface IUnitOfWork : IAsyncDisposable
 {

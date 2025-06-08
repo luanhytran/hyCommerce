@@ -1,9 +1,9 @@
 using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Entities.Helpers;
 
-namespace hyCommerce.Domain.Repositories;
+namespace hyCommerce.Domain.Interfaces;
 
-public interface IProductRepository
+public interface IProductRepository : IRepository<Product>
 {
     public Task<List<Product>> GetProducts(ProductParams productParams);
     public Task<Product?> GetProduct(int id);

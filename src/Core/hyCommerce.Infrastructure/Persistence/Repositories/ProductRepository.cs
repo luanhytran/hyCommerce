@@ -1,14 +1,15 @@
 ﻿using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Entities.Helpers;
 using hyCommerce.Domain.Extensions;
-using hyCommerce.Domain.Repositories;
+using hyCommerce.Domain.Interfaces;
 using hyCommerce.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace hyCommerce.Infrastructure.Persistence.Repositories;
 
-public class ProductRepository(AppDbContext context) : IProductRepository
+public class ProductRepository(AppDbContext context) : Repository<Product>(context), IProductRepository
 {
+
     public async Task<List<Product>> GetProducts(ProductParams productParams)
     {
         var query = context.Products.

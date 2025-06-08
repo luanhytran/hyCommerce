@@ -22,7 +22,7 @@ namespace hyCommerce.Domain.Extensions
         {
             if (string.IsNullOrEmpty(searchTerm)) return query;
 
-            return query.Where(p => p.Name.Contains(searchTerm.Trim().ToLower()));
+            return query.Where(p => p.Name.ToLower().Contains(searchTerm.Trim().ToLower()));
         }
 
         public static IQueryable<Product> Filter(this IQueryable<Product> query, string category, string brand)

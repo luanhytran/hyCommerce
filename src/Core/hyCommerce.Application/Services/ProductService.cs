@@ -1,7 +1,7 @@
 ﻿using hyCommerce.Domain;
 using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Entities.Helpers;
-using hyCommerce.Domain.Repositories;
+using hyCommerce.Domain.Interfaces;
 using hyCommerce.Extensions.Exceptions;
 
 namespace hyCommerce.Application.Services;
