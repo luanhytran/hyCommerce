@@ -2,32 +2,33 @@
 using hyCommerce.Domain.Entities.Order;
 using Microsoft.AspNetCore.Mvc;
 
+namespace hyCommerce.API.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class OrderController(IOrderService orderService) : ControllerBase
 {
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<Order>> GetOrder(int id)
     {
-        //var order = await orderService.GetOrder(id);
-        //if (order == null) return NotFound();
-        //return Ok(order);
-        return Ok();
+        var order = await orderService.GetOrderById(id);
+        if (order == null) return NotFound();
+        return Ok(order);
     }
 
-    [HttpGet("user/{userId}")]
-    public async Task<ActionResult<List<Order>>> GetOrders(string userId)
+    [HttpGet("user/{userId:int}")]
+    public async Task<ActionResult<List<Order>>> GetOrders(int userId)
     {
-        //var orders = await orderService.GetOrders(userId);
-        //return Ok(orders);
-        return Ok();
+        // TODO: change userId to string later
+        var orders = await orderService.GetOrderById(userId);
+        return Ok(orders);
     }
 
-    [HttpPost("{userId}")]
-    public async Task<ActionResult<Order>> CreateOrder(string userId)
+    [HttpPost("{userId:int}")]
+    public async Task<ActionResult<Order>> CreateOrder(int userId)
     {
-        //var order = await orderService.CreateOrderFromCart(userId);
-        //return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
-        return Ok();
+        // TODO: change userId to string later
+        var order = await orderService.CreateOrderFromCart(userId);
+        return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
     }
 }

@@ -8,14 +8,14 @@ namespace hyCommerce.Domain.Entities.Order
         public int BuyerId { get; set; }
 
         [Required]
-        public required ShippingAdress ShippingAdress { get; set; }
+        public ShippingAdress? ShippingAdress { get; init; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
         public ICollection<OrderItem> OrderItems { get; set; } = [];
         public decimal Subtotal { get; set; }
         public decimal DeliveryFee { get; set; }
         public int DiscountId { get; set; }
-        public required Discount Discount { get; set; }
+        public Discount? Discount { get; set; }
         public int PaymentId { get; set; }
         public string? DeletedBy { get; set; }
         public DateTime? DeletedAt { get; set; }
