@@ -1,4 +1,5 @@
 ﻿using hyCommerce.Domain.Entities;
+using hyCommerce.Domain.Entities.Cart;
 using hyCommerce.Domain.Entities.Order;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,9 @@ public class AppDbContext : IdentityDbContext<User, Role, int>
     public DbSet<Likes> Likes { get; set; }
     public DbSet<Discount> Discounts { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

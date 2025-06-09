@@ -1,5 +1,4 @@
-﻿using hyCommerce.Domain;
-using hyCommerce.Domain.Entities;
+﻿using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Entities.Helpers;
 using hyCommerce.Domain.Interfaces;
 using hyCommerce.Extensions.Exceptions;

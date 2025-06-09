@@ -7,5 +7,7 @@ namespace hyCommerce.Domain.Entities.Order
         public required ProductItemOrdered ProductItemOrdered { get; set; }
         public long Price { get; set; }
         public int Quantity { get; set; }
+        public int OrderId { get; set; }
+        public Order Order { get; set; } = default!;
     }
 }
