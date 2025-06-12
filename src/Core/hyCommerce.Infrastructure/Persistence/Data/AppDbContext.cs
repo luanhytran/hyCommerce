@@ -1,18 +1,15 @@
 ﻿using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Entities.Cart;
 using hyCommerce.Domain.Entities.Order;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace hyCommerce.Infrastructure.Persistence.Data;
 
-public class AppDbContext : IdentityDbContext<User, Role, int>
+public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Brand> Brands { get; set; }
@@ -46,10 +43,10 @@ public class AppDbContext : IdentityDbContext<User, Role, int>
         builder.Entity<RefreshToken>()
             .HasKey(rt => rt.Id);
 
-        builder.Entity<Role>()
+        builder.Entity<IdentityRole>()
             .HasData(
-                new Role { Id = 1, Name = "Member", NormalizedName = "MEMBER" },
-                new Role { Id = 2, Name = "Admin", NormalizedName = "ADMIN" }
+                new IdentityRole {Id = "e069461a-10cf-4abf-9930-d070b2a7e40f", Name = "Member", NormalizedName = "MEMBER"},
+                new IdentityRole {Id = "ed2e9149-fa53-484c-a93f-bd33f9e9fcf6", Name = "Admin", NormalizedName = "ADMIN"}
             );
 
         builder.Entity<OrderItem>()

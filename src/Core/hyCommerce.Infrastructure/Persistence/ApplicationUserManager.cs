@@ -29,7 +29,7 @@ public class ApplicationUserManager : UserManager<User>
         
         if (httpContext != null && httpContext.User != null && httpContext.User.Claims != null)
         {
-            _userId = String.IsNullOrEmpty(httpContext.User.Claims.GetClaimValue(ClaimTypes.NameIdentifier))
+            _userId = string.IsNullOrEmpty(httpContext.User.Claims.GetClaimValue(ClaimTypes.NameIdentifier))
                 ? "System"
                 : httpContext.User.Claims.GetClaimValue(ClaimTypes.NameIdentifier);
         }
