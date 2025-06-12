@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace hyCommerce.Infrastructure.Persistence.Repositories;
 
-public class OrderRepository(AppDbContext context) : IOrderRepository
+public class OrderRepository(AppDbContext context) : Repository<Order>(context), IOrderRepository
 {
-    public async Task<Order?> GetOrderByIdAsync(int id)
+    public override async Task<Order?> GetByIdAsync(int id)
     {
         return await context.Orders
             .Include(o => o.OrderItems)

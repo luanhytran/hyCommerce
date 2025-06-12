@@ -49,6 +49,7 @@ public class Repository<T> : IRepository<T> where T : class
         _dbSet.Remove(entity);
         await _context.SaveChangesAsync();
     }
+
     public virtual async Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate)
     {
         return await _dbSet.Where(predicate).ToListAsync();

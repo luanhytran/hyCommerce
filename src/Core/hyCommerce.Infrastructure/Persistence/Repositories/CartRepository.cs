@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace hyCommerce.Infrastructure.Persistence.Repositories;
 
-public class CartRepository(AppDbContext context) : ICartRepository
+public class CartRepository(AppDbContext context) : Repository<Cart>(context), ICartRepository
 {
     public async Task<Cart?> GetCartByUserIdAsync(string userId)
     {
@@ -35,9 +35,9 @@ public class CartRepository(AppDbContext context) : ICartRepository
         return cart;
     }
 
-    public async Task<bool> RemoveCartAsync(int cartId)
+    public override async Task<bool> DeleteAsync(int id)
     {
-        var cart = await context.Carts.FindAsync(cartId);
+        var cart = await context.Carts.FindAsync(id);
         if (cart == null) return false;
         context.Carts.Remove(cart);
         return await context.SaveChangesAsync() > 0;
