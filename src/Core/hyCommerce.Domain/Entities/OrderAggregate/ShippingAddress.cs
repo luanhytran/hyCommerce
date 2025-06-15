@@ -1,12 +1,11 @@
 ﻿using System.Text.Json.Serialization;
-using hyCommerce.Domain.Entities.Base;
+using Microsoft.EntityFrameworkCore;
 
-namespace hyCommerce.Domain.Entities
+namespace hyCommerce.Domain.Entities.OrderAggregate
 {
-    public class Address : AuditEntity
+    [Owned]
+    public class ShippingAddress
     {
-        [JsonIgnore]
-        public int Id { get; set; }
         public required string Name { get; set; }
         public required string Line1 { get; set; }
         public string? Line2 { get; set; }

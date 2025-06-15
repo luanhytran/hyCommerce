@@ -5,7 +5,8 @@ namespace hyCommerce.Domain.Entities
 {
     public class User : IdentityUser, IAuditEntity, ISoftDelete
     {
-        public UserAddress Address { get; set; }
+        public int? AddressId { get; set; }
+        public Address? Address { get; set; }
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
