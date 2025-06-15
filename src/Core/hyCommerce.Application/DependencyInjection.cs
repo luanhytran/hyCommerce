@@ -1,6 +1,5 @@
 using System.Text;
 using hyCommerce.Application.Services;
-using hyCommerce.Domain;
 using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Interfaces;
 using hyCommerce.Infrastructure.Persistence;
@@ -103,7 +102,7 @@ public static class DependencyInjection
                 opt.SignIn.RequireConfirmedEmail = true;
             })
             .AddUserManager<ApplicationUserManager>()
-            .AddRoles<Role>()
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<TContext>()
             .AddDefaultTokenProviders();
         

@@ -1,33 +1,26 @@
-﻿using hyCommerce.Domain.Entities.Order;
+﻿using hyCommerce.Domain.Entities.OrderAggregate;
 using hyCommerce.Domain.Interfaces;
 using hyCommerce.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace hyCommerce.Infrastructure.Persistence.Repositories;
 
-public class OrderRepository(AppDbContext context) : Repository<Order>(context), IOrderRepository
+public class OrderRepository(AppDbContext context) : IOrderRepository
 {
-    public override async Task<Order?> GetByIdAsync(int id)
+    public async Task<List<Order>> GetOrders(string buyerEmail)
     {
         return await context.Orders
-            .Include(o => o.OrderItems)
-            .ThenInclude(oi => oi.ProductItemOrdered)
-            .FirstOrDefaultAsync(o => o.Id == id);
-    }
-
-    public async Task<List<Order>> GetOrdersByUserIdAsync(int userId)
-    {
-        return await context.Orders
-            .Where(o => o.BuyerId == userId)
-            .Include(o => o.OrderItems)
-            .ThenInclude(oi => oi.ProductItemOrdered)
+            .Where(o => o.BuyerEmail == buyerEmail)
             .ToListAsync();
     }
 
-    public async Task<Order> CreateOrderAsync(Order order)
+    public Task<Order> GetOrderDetails(int id)
     {
-        context.Orders.Add(order);
-        await context.SaveChangesAsync();
-        return order;
+        throw new NotImplementedException();
+    }
+
+    public Task<Order> CreateOrder(string paymentIntentId)
+    {
+        throw new NotImplementedException();
     }
 }

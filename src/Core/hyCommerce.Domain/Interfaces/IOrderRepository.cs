@@ -1,10 +1,12 @@
-﻿using hyCommerce.Domain.Entities.Order;
+﻿using hyCommerce.Domain.Entities.OrderAggregate;
 
 namespace hyCommerce.Domain.Interfaces
 {
-    public interface IOrderRepository : IRepository<Order>
+    public interface IOrderRepository
     {
-        Task<List<Order>> GetOrdersByUserIdAsync(int userId);
-        Task<Order> CreateOrderAsync(Order order);
+        Task<List<Order>> GetOrders(string buyerEmail);
+        Task<Order> GetOrderDetails(int id);
+
+        Task<Order> CreateOrder(string PaymentIntentId);
     }
 }

@@ -1,10 +1,13 @@
-﻿using hyCommerce.Domain.Entities.Cart;
+﻿using hyCommerce.Domain.Entities;
 
 namespace hyCommerce.Domain.Interfaces
 {
-    public interface ICartRepository : IRepository<Cart>
+    public interface ICartRepository
     {
-        Task<Cart?> GetCartByUserIdAsync(string userId);
-        Task<Cart> CreateOrUpdateCartAsync(Cart cart);
+        Task<Cart> GetCart();
+        Task<Cart> AddItemToCart(int productId, int quantity);
+        Task RemoveCartItem(int productId, int quantity);
+        Task<Cart> AddCouponCode(string code);
+        Task RemoveCouponFromCart();
     }
 }

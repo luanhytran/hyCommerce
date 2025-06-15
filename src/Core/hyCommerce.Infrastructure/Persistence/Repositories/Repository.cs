@@ -40,14 +40,14 @@ public class Repository<T> : IRepository<T> where T : class
         return entity;
     }
 
-    public virtual async Task DeleteAsync(int id)
+    public virtual async Task<bool> DeleteAsync(int id)
     {
         var entity = await _dbSet.FindAsync(id);
         if (entity == null)
             throw new KeyNotFoundException($"Entity with id {id} not found.");
         
         _dbSet.Remove(entity);
-        await _context.SaveChangesAsync();
+        return await _context.SaveChangesAsync() > 0;
     }
 
     public virtual async Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate)

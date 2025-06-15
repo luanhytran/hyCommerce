@@ -1,45 +1,33 @@
-﻿using hyCommerce.Domain.Entities.Cart;
+﻿using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Interfaces;
 using hyCommerce.Infrastructure.Persistence.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace hyCommerce.Infrastructure.Persistence.Repositories;
 
-public class CartRepository(AppDbContext context) : Repository<Cart>(context), ICartRepository
+public class CartRepository(AppDbContext context) : ICartRepository
 {
-    public async Task<Cart?> GetCartByUserIdAsync(string userId)
+    public Task<Cart> GetCart()
     {
-        return await context.Carts
-            .Include(c => c.CartItems)
-            .ThenInclude(ci => ci.Product)
-            .FirstOrDefaultAsync(c => c.BuyerId == userId);
+        throw new NotImplementedException();
     }
 
-    public async Task<Cart> CreateOrUpdateCartAsync(Cart cart)
+    public Task<Cart> AddItemToCart(int productId, int quantity)
     {
-        var existing = await context.Carts
-            .Include(c => c.CartItems)
-            .FirstOrDefaultAsync(c => c.BuyerId == cart.BuyerId);
-
-        if (existing == null)
-        {
-            context.Carts.Add(cart);
-        }
-        else
-        {
-            existing.CartItems = cart.CartItems;
-            context.Carts.Update(existing);
-        }
-
-        await context.SaveChangesAsync();
-        return cart;
+        throw new NotImplementedException();
     }
 
-    public override async Task<bool> DeleteAsync(int id)
+    public Task RemoveCartItem(int productId, int quantity)
     {
-        var cart = await context.Carts.FindAsync(id);
-        if (cart == null) return false;
-        context.Carts.Remove(cart);
-        return await context.SaveChangesAsync() > 0;
+        throw new NotImplementedException();
+    }
+
+    public Task<Cart> AddCouponCode(string code)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task RemoveCouponFromCart()
+    {
+        throw new NotImplementedException();
     }
 }

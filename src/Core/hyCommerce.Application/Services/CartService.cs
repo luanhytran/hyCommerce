@@ -1,32 +1,42 @@
-﻿using hyCommerce.Domain.Entities.Cart;
+﻿using hyCommerce.Domain.Entities;
 using hyCommerce.Domain.Interfaces;
 
 namespace hyCommerce.Application.Services
 {
     public interface ICartService
     {
-        Task<Cart?> GetCart(string userId);
-        Task<Cart> AddOrUpdateCart(string userId, List<CartItem> items);
-        Task<bool> RemoveCart(int cartId);
+        Task<Cart> GetCart();
+        Task<Cart> AddItemToCart(int productId, int quantity);
+        Task RemoveCartItem(int productId, int quantity);
+        Task<Cart> AddCouponCode(string code);
+        Task RemoveCouponFromCart();
     }
 
     public class CartService(ICartRepository cartRepository) : ICartService
     {
-        public async Task<Cart?> GetCart(string userId)
+        public Task<Cart> GetCart()
         {
-            return await cartRepository.GetCartByUserIdAsync(userId);
+            throw new NotImplementedException();
         }
 
-        public async Task<Cart> AddOrUpdateCart(string userId, List<CartItem> items)
+        public Task<Cart> AddItemToCart(int productId, int quantity)
         {
-            var cart = await cartRepository.GetCartByUserIdAsync(userId) ?? new Cart { BuyerId = userId, CartItems = new List<CartItem>() };
-            cart.CartItems = items;
-            return await cartRepository.CreateOrUpdateCartAsync(cart);
+            throw new NotImplementedException();
         }
 
-        public async Task<bool> RemoveCart(int cartId)
+        public Task RemoveCartItem(int productId, int quantity)
         {
-            return await cartRepository.RemoveCartAsync(cartId);
+            throw new NotImplementedException();
+        }
+
+        public Task<Cart> AddCouponCode(string code)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveCouponFromCart()
+        {
+            throw new NotImplementedException();
         }
     }
 }
