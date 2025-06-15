@@ -1,6 +1,5 @@
 ﻿using hyCommerce.Domain.Entities;
-using hyCommerce.Domain.Entities.Cart;
-using hyCommerce.Domain.Entities.Order;
+using hyCommerce.Domain.Entities.OrderAggregate;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,24 +14,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
-    public DbSet<Basket> Baskets { get; set; }
-    public DbSet<BasketItem> BasketItems { get; set; }
-    public DbSet<Likes> Likes { get; set; }
-    public DbSet<Discount> Discounts { get; set; }
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<Cart> Carts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
-
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        builder.Entity<User>()
-            .HasOne(a => a.Address)
-            .WithOne()
-            .HasForeignKey<UserAddress>(a => a.Id)
-            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<User>()
             .HasMany(u => u.RefreshTokens)
@@ -48,11 +36,5 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 new IdentityRole {Id = "e069461a-10cf-4abf-9930-d070b2a7e40f", Name = "Member", NormalizedName = "MEMBER"},
                 new IdentityRole {Id = "ed2e9149-fa53-484c-a93f-bd33f9e9fcf6", Name = "Admin", NormalizedName = "ADMIN"}
             );
-
-        builder.Entity<OrderItem>()
-            .OwnsOne(oi => oi.ProductItemOrdered, pio => { pio.WithOwner(); });
-
-        builder.Entity<Order>()
-            .OwnsOne(o => o.ShippingAdress, sa => { sa.WithOwner(); });
     }
 }
